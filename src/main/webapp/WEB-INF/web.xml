@@ -6,7 +6,7 @@
     <!-- Avatar directory configuration -->
     <context-param>
         <param-name>avatarDir</param-name>
-        <param-value>/tmp/avatars</param-value>
+        <param-value>src/main/resources/com/app/movietradingplatform/avatars</param-value>
     </context-param>
 
     <!-- User management servlet -->
