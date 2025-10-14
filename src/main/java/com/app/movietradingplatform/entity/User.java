@@ -1,4 +1,4 @@
-package com.app.movietradingplatform.entities;
+package com.app.movietradingplatform.entity;
 
 import java.io.*;
 import java.time.LocalDate;

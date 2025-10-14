@@ -1,0 +1,46 @@
+### Get all users
+GET http://desktop-gi1hiaj:9080/MovieTradingPlatform/api/users
+
+### Get one user
+GET http://localhost:9080/MovieTradingPlatform/api/users/4e8d7e31-1b9e-4882-a917-5d765c08493f
+
+### Get non-existent user (FAIL)
+GET http://localhost:9080/MovieTradingPlatform/api/users/4e8d7e31-1b9e-4882-a917-5d765c08493e
+
+### Upload user's avatar
+POST http://localhost:9080/MovieTradingPlatform/api/users/4e8d7e31-1b9e-4882-a917-5d765c08493f/avatar
+Content-Type: multipart/form-data; boundary=WebAppForm
+
+--WebAppForm
+Content-Disposition: form-data; name="file"; filename="michael-b-jordan.png"
+Content-Type: image/png
+
+< ./src/main/resources/com/app/movietradingplatform/avatars/michael-b-jordan.png
+--WebAppForm--
+
+### Get user's avatar
+GET http://localhost:9080/MovieTradingPlatform/api/users/4e8d7e31-1b9e-4882-a917-5d765c08493f/avatar
+
+### Update user's avatar
+PUT http://localhost:9080/MovieTradingPlatform/api/users/4e8d7e31-1b9e-4882-a917-5d765c08493f/avatar
+Content-Type: multipart/form-data; boundary=WebAppForm
+
+--WebAppForm
+Content-Disposition: form-data; name="file"; filename="jeremy-strong.png"
+Content-Type: image/png
+
+< ./src/main/resources/com/app/movietradingplatform/avatars/jeremy-strong.png
+--WebAppForm--
+
+### Get user's avatar after update
+GET http://localhost:9080/MovieTradingPlatform/api/users/4e8d7e31-1b9e-4882-a917-5d765c08493f/avatar
+
+### Get other user's non-existent avatar (FAIL)
+GET http://localhost:9080/MovieTradingPlatform/api/users/8100b921-4b6b-4362-b9d4-53c3fd64896f/avatar
+
+### Delete user’s avatar
+DELETE http://localhost:9080/MovieTradingPlatform/api/users/4e8d7e31-1b9e-4882-a917-5d765c08493f/avatar
+
+### Try getting deleted user's avatar (FAIL)
+GET http://localhost:9080/MovieTradingPlatform/api/users/4e8d7e31-1b9e-4882-a917-5d765c08493f/avatar
+Accept: image/png

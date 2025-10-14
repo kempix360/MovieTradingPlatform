@@ -1,4 +1,4 @@
-package com.app.movietradingplatform.entities;
+package com.app.movietradingplatform.entity.enums;
 
 public enum Genre {
     ACTION,

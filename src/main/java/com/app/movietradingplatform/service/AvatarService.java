@@ -19,12 +19,16 @@ public class AvatarService {
         return Files.exists(getAvatarPath(userId));
     }
 
-    public void save(String userId, InputStream input) throws IOException {
-        Files.copy(input, getAvatarPath(userId), StandardCopyOption.REPLACE_EXISTING);
-    }
-
     public InputStream load(String userId) throws IOException {
         return Files.newInputStream(getAvatarPath(userId));
+    }
+
+    public void save(String userId, InputStream input) throws IOException {
+        Files.copy(input, getAvatarPath(userId));
+    }
+
+    public void update(String userId, InputStream input) throws IOException {
+        Files.copy(input, getAvatarPath(userId), StandardCopyOption.REPLACE_EXISTING);
     }
 
     public boolean delete(String userId) throws IOException {

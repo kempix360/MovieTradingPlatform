@@ -1,8 +1,8 @@
 package com.app.movietradingplatform.service;
 
-import com.app.movietradingplatform.entities.User;
+import com.app.movietradingplatform.entity.User;
 
-import java.time.LocalDate;
+import java.io.IOException;
 import java.util.*;
 
 public class UserService {
@@ -17,10 +17,46 @@ public class UserService {
     }
 
     public List<User> getAll() { return new ArrayList<>(users); }
+
     public User getById(UUID id) {
         return users.stream()
                 .filter(user -> user.getId().equals(id))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public boolean exists(UUID id) {
+        return users.stream().anyMatch(user -> user.getId().equals(id));
+    }
+
+    public User load(UUID id) {
+        return getById(id);
+    }
+
+    public User save(User user) throws IOException {
+        if (user.getId() == null) {
+            user.setId(UUID.randomUUID());
+        }
+        users.add(user);
+        return user;
+    }
+
+    public User update(User user) {
+        if (user.getId() == null) {
+            user.setId(UUID.randomUUID());
+        }
+
+        // Remove existing user first
+        boolean userRemoved = users.removeIf(u -> u.getId().equals(user.getId()));
+        if (!userRemoved) {
+            throw new NoSuchElementException("User not found with ID: " + user.getId());
+        }
+
+        users.add(user);
+        return user;
+    }
+
+    public boolean delete(UUID id) throws IOException {
+        return users.removeIf(user -> user.getId().equals(id));
     }
 }

@@ -6,26 +6,16 @@
     <!-- Avatar directory configuration -->
     <context-param>
         <param-name>avatarDir</param-name>
-        <param-value>src/main/resources/com/app/movietradingplatform/avatars</param-value>
+        <param-value>/temp/avatars</param-value>
     </context-param>
 
     <!-- User management servlet -->
     <servlet>
-        <servlet-name>UserServlet</servlet-name>
-        <servlet-class>com.app.movietradingplatform.controller.servlet.UserServlet</servlet-class>
+        <servlet-name>ApiServlet</servlet-name>
+        <servlet-class>com.app.movietradingplatform.controller.servlet.ApiServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>UserServlet</servlet-name>
-        <url-pattern>/api/users/*</url-pattern>
-    </servlet-mapping>
-
-    <!-- Avatar management servlet -->
-    <servlet>
-        <servlet-name>AvatarServlet</servlet-name>
-        <servlet-class>com.app.movietradingplatform.controller.servlet.AvatarServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>AvatarServlet</servlet-name>
-        <url-pattern>/api/avatars/*</url-pattern>
+        <servlet-name>ApiServlet</servlet-name>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 </web-app>

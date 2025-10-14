@@ -1,4 +1,4 @@
-package com.app.movietradingplatform.entities;
+package com.app.movietradingplatform.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import com.app.movietradingplatform.entity.enums.Genre;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 

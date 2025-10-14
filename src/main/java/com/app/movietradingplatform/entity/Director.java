@@ -1,4 +1,4 @@
-package com.app.movietradingplatform.entities;
+package com.app.movietradingplatform.entity;
 
 import lombok.Getter;
 import lombok.Setter;
