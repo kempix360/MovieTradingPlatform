@@ -1,14 +1,17 @@
-package com.app.movietradingplatform.service;
+package com.app.movietradingplatform.entity.user.service;
 
-import com.app.movietradingplatform.entity.User;
+import com.app.movietradingplatform.entity.user.User;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
-import java.io.IOException;
 import java.util.*;
 
+@ApplicationScoped
 public class UserService {
-    private static final List<User> users = new ArrayList<>();
+    private final List<User> users = new ArrayList<>();
 
-    static {
+    @Inject
+    public UserService() {
         // Load test users
         users.add(new User(UUID.fromString("4e8d7e31-1b9e-4882-a917-5d765c08493f"), "Michael B. Jordan"));
         users.add(new User(UUID.fromString("4128c40e-1a95-45db-84da-fb14ceb1c870"), "Jeremy Strong"));
@@ -25,15 +28,7 @@ public class UserService {
                 .orElse(null);
     }
 
-    public boolean exists(UUID id) {
-        return users.stream().anyMatch(user -> user.getId().equals(id));
-    }
-
-    public User load(UUID id) {
-        return getById(id);
-    }
-
-    public User save(User user) throws IOException {
+    public User save(User user) {
         if (user.getId() == null) {
             user.setId(UUID.randomUUID());
         }
@@ -56,7 +51,7 @@ public class UserService {
         return user;
     }
 
-    public boolean delete(UUID id) throws IOException {
+    public boolean delete(UUID id) {
         return users.removeIf(user -> user.getId().equals(id));
     }
 }

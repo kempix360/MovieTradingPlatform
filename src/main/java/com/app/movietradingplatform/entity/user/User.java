@@ -1,4 +1,11 @@
-package com.app.movietradingplatform.entity;
+package com.app.movietradingplatform.entity.user;
+
+import com.app.movietradingplatform.entity.movie.Movie;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -6,20 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
-import lombok.experimental.SuperBuilder;
-
-//@Getter
+@Getter
 @Setter
 @SuperBuilder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-//@NoArgsConstructor
 public class User implements Serializable {
     private UUID id;
     private String username;
     private LocalDate registrationDate;
-    @JsonManagedReference
     private List<Movie> ownedMovies;
 
     public User(){
@@ -45,16 +46,6 @@ public class User implements Serializable {
         this.username = username;
         this.registrationDate = registrationDate;
         this.ownedMovies = ownedMovies;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-    public String getUsername() {
-        return username;
-    }
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
     }
 
     public void addMovie(Movie movie) {

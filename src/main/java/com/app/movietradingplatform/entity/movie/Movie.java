@@ -1,4 +1,4 @@
-package com.app.movietradingplatform.entity;
+package com.app.movietradingplatform.entity.movie;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import com.app.movietradingplatform.entity.user.User;
+import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.enums.Genre;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -14,7 +16,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @SuperBuilder
-//@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Movie implements Serializable {
     private UUID id;

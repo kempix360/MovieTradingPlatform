@@ -8,14 +8,4 @@
         <param-name>avatarDir</param-name>
         <param-value>/temp/avatars</param-value>
     </context-param>
-
-    <!-- User management servlet -->
-    <servlet>
-        <servlet-name>ApiServlet</servlet-name>
-        <servlet-class>com.app.movietradingplatform.controller.servlet.ApiServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ApiServlet</servlet-name>
-        <url-pattern>/api/*</url-pattern>
-    </servlet-mapping>
 </web-app>
