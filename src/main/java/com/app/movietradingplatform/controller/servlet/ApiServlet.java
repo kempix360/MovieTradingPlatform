@@ -29,8 +29,8 @@ public class ApiServlet extends HttpServlet {
         public static final Pattern USER_SINGLE_MOVIE = Pattern.compile("/users/(" + UUID.pattern() + ")" +
                 "/movies/(" + UUID.pattern() + ")/?");
 
-        public static final Pattern DIRECTORS = Pattern.compile("/users/?");
-        public static final Pattern DIRECTOR = Pattern.compile("/users/(" + UUID.pattern() + ")/?");
+        public static final Pattern DIRECTORS = Pattern.compile("/directors/?");
+        public static final Pattern DIRECTOR = Pattern.compile("/directors/(" + UUID.pattern() + ")/?");
     }
 
     public static UUID extractUuid(Pattern pattern, String path) {
@@ -48,12 +48,19 @@ public class ApiServlet extends HttpServlet {
 
         if (path.matches(Patterns.USERS.pattern())) {
             userController.getAllUsers(resp);
+            return;
         }
         if (path.matches(Patterns.USER.pattern())) {
             userController.getUserById(extractUuid(Patterns.USER, path), resp);
+            return;
         }
         if (path.matches(Patterns.USER_AVATAR.pattern())) {
             userController.getAvatar(extractUuid(Patterns.USER_AVATAR, path), resp);
+            return;
+        }
+        if (path.matches(Patterns.USER_MOVIES.pattern())) {
+            userController.getMovies(extractUuid(Patterns.USER_MOVIES, path), resp);
+            return;
         }
 
         if (path.matches(Patterns.DIRECTORS.pattern())) {
@@ -61,7 +68,7 @@ public class ApiServlet extends HttpServlet {
             return;
         }
         if (path.matches(Patterns.DIRECTOR.pattern())) {
-            directorController.getDirectorById(path.substring(1), resp);
+            directorController.getDirectorById(extractUuid(Patterns.DIRECTOR, path), resp);
             return;
         }
         resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown GET path: " + path);
@@ -74,6 +81,7 @@ public class ApiServlet extends HttpServlet {
 
         if (path.matches(Patterns.USERS.pattern())) {
             userController.createUser(req, resp);
+            return;
         }
         if (path.matches(Patterns.USER_AVATAR.pattern())) {
             userController.saveAvatar(extractUuid(Patterns.USER_AVATAR, path), req, resp);
@@ -81,7 +89,7 @@ public class ApiServlet extends HttpServlet {
         }
 
         if (path.matches(Patterns.DIRECTORS.pattern())) {
-            directorController.createDirector(req.getReader().readLine(), resp);
+            directorController.createDirector(req, resp);
             return;
         }
         resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -101,7 +109,7 @@ public class ApiServlet extends HttpServlet {
         }
 
         if (path.matches(Patterns.DIRECTORS.pattern())) {
-            directorController.updateDirector(req.getReader().readLine(), resp);
+            directorController.updateDirector(req, resp);
             return;
         }
         resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -114,6 +122,7 @@ public class ApiServlet extends HttpServlet {
 
         if (path.matches(Patterns.USER.pattern())) {
             userController.deleteUser(extractUuid(Patterns.USER, path), resp);
+            return;
         }
         if (path.matches(Patterns.USER_AVATAR.pattern())) {
             userController.deleteAvatar(extractUuid(Patterns.USER_AVATAR, path), resp);
@@ -121,7 +130,7 @@ public class ApiServlet extends HttpServlet {
         }
 
         if (path.matches(Patterns.DIRECTOR.pattern())) {
-            directorController.deleteDirector(path.substring(1), resp);
+            directorController.deleteDirector(extractUuid(Patterns.DIRECTOR, path), resp);
             return;
         }
         resp.sendError(HttpServletResponse.SC_BAD_REQUEST);

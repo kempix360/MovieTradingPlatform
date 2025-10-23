@@ -29,26 +29,10 @@ public class User implements Serializable {
         this.registrationDate = LocalDate.now();
         this.ownedMovies = new ArrayList<>();
     }
-    public User(String username) {
-        this.id = UUID.randomUUID();
-        this.username = username;
-        this.registrationDate = LocalDate.now();
-        this.ownedMovies = new ArrayList<>();
-    }
-    public User(UUID id, String username) {
-        this.id = id;
-        this.username = username;
-        this.registrationDate = LocalDate.now();
-        this.ownedMovies = new ArrayList<>();
-    }
-    public User(String username, LocalDate registrationDate, List<Movie> ownedMovies) {
-        this.id = UUID.randomUUID();
-        this.username = username;
-        this.registrationDate = registrationDate;
-        this.ownedMovies = ownedMovies;
-    }
 
     public void addMovie(Movie movie) {
-        this.ownedMovies.add(movie);
+        if (!this.ownedMovies.contains(movie)) {
+            this.ownedMovies.add(movie);
+        }
     }
 }

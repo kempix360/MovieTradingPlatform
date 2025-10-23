@@ -2,8 +2,7 @@ package com.app.movietradingplatform.entity.user.controller;
 
 import com.app.movietradingplatform.entity.user.User;
 import com.app.movietradingplatform.entity.user.service.UserService;
-import com.app.movietradingplatform.service.AvatarService;
-import com.app.movietradingplatform.utils.Utils;
+import com.app.movietradingplatform.entity.user.service.AvatarService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
@@ -96,18 +95,6 @@ public class UserController {
         }
     }
 
-    public void getMovies(UUID id, HttpServletResponse resp) throws IOException {
-        resp.setContentType("image/png");
-        try (InputStream in = avatarService.load(id);
-             OutputStream out = resp.getOutputStream()) {
-            byte[] buffer = new byte[8192];
-            int bytesRead;
-            while ((bytesRead = in.read(buffer)) != -1) {
-                out.write(buffer, 0, bytesRead);
-            }
-        }
-    }
-
     public void saveAvatar(UUID id, HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Part filePart = req.getPart("file");
         if (filePart == null) {
@@ -142,5 +129,16 @@ public class UserController {
         } else {
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }
+    }
+
+    public void getMovies(UUID id, HttpServletResponse resp) throws IOException {
+        User user = userService.getById(id);
+        if (user == null) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
+            return;
+        }
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.setContentType("application/json");
+        jsonb.toJson(user.getOwnedMovies(), resp.getWriter());
     }
 }

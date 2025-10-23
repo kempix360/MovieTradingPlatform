@@ -1,4 +1,4 @@
-package com.app.movietradingplatform.service;
+package com.app.movietradingplatform.entity.user.service;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;

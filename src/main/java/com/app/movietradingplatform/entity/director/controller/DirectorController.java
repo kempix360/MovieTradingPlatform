@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -27,8 +28,7 @@ public class DirectorController {
         jsonb.toJson(directorService.getAll(), resp.getWriter());
     }
 
-    public void getDirectorById(String path, HttpServletResponse resp) throws IOException {
-        UUID id = UUID.fromString(path);
+    public void getDirectorById(UUID id, HttpServletResponse resp) throws IOException {
         Director director = directorService.getById(id);
         if (director == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Director not found");
@@ -38,9 +38,9 @@ public class DirectorController {
         }
     }
 
-    public void createDirector(String json, HttpServletResponse resp) throws IOException {
+    public void createDirector(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            Director director = jsonb.fromJson(json, Director.class);
+            Director director = jsonb.fromJson(req.getReader(), Director.class);
             Director createdDirector = directorService.save(director);
             resp.setStatus(HttpServletResponse.SC_CREATED);
             resp.setContentType("application/json");
@@ -50,9 +50,9 @@ public class DirectorController {
         }
     }
 
-    public void updateDirector(String json, HttpServletResponse resp) throws IOException {
+    public void updateDirector(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            Director director = jsonb.fromJson(json, Director.class);
+            Director director = jsonb.fromJson(req.getReader(), Director.class);
             Director updatedDirector = directorService.update(director);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
@@ -62,8 +62,7 @@ public class DirectorController {
         }
     }
 
-    public void deleteDirector(String path, HttpServletResponse resp) throws IOException {
-        UUID id = UUID.fromString(path);
+    public void deleteDirector(UUID id, HttpServletResponse resp) throws IOException {
         if (directorService.delete(id)) {
             resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else {

@@ -28,19 +28,9 @@ public class Director implements Serializable {
         this.description = "";
         this.movies = new ArrayList<>();
     }
-    public Director(String name, String description) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.description = description;
-        this.movies = new ArrayList<>();
-    }
-    public Director(String name, String description, List<Movie> movies) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.description = description;
-        this.movies = movies;
-    }
     public void addMovie(Movie movie) {
-        this.movies.add(movie);
+        if (!this.movies.contains(movie)) {
+            this.movies.add(movie);
+        }
     }
 }
