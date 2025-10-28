@@ -1,0 +1,40 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="userId" value="#{movieDetailsView.userId}"/>
+        <f:viewParam name="movieId" value="#{movieDetailsView.movieId}"/>
+        <f:viewAction action="#{movieDetailsView.loadMovie}"/>
+    </f:metadata>
+
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="main.css"/>
+        <h:outputStylesheet library="css" name="movie.css"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:panelGroup rendered="#{not empty movieDetailsView.movie}">
+            <section class="movie-details">
+                <header>
+                    <h2>Movie Details</h2>
+                </header>
+
+                <p><b>Title:</b> #{movieDetailsView.movie.title}</p>
+                <p><b>Movie ID:</b> #{movieDetailsView.movie.id}</p>
+
+                <br/>
+                <h:link outcome="user_details" value="← Back to User">
+                    <f:param name="id" value="#{movieDetailsView.userId}"/>
+                </h:link>
+            </section>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{empty movieDetailsView.movie}">
+            <p>Movie not found.</p>
+            <h:link outcome="user_list" value="Back to users"/>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>

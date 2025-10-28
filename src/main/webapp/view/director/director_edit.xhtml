@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                template="/template/main.xhtml">
+    <f:metadata>
+        <f:viewParam name="id" value="#{directorEditView.id}" required="true" />
+        <f:viewAction action="#{directorEditView.loadDirector}" />
+    </f:metadata>
+
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="main.css"/>
+        <h:outputStylesheet library="css" name="form.css"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form styleClass="form-container">
+            <h2><h:outputText value="Edit director"/></h2>
+
+            <!-- directorname -->
+            <div class="form-group mb-3">
+                <h:outputLabel for="directorname" value="Name:"/>
+                <h:inputText id="directorname" value="#{directorEditView.director.name}" required="true"
+                             styleClass="form-control"/>
+            </div>
+
+            <!-- Registration date -->
+            <div class="form-group mb-3">
+                <h:outputLabel for="registrationDate" value="Description:"/>
+                <h:inputText id="registrationDate" value="#{directorEditView.director.description}"
+                             required="true" styleClass="form-control">
+                </h:inputText>
+            </div>
+
+            <!-- Buttons -->
+            <div class="mt-4">
+                <h:commandButton value="Update"
+                                 action="#{directorEditView.update}"
+                                 styleClass="btn btn-success"/>
+                <h:link value="Cancel"
+                        outcome="/view/director/director_list.xhtml"
+                        styleClass="btn btn-secondary ms-2"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>

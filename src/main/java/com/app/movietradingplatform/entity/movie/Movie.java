@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 @SuperBuilder
+@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Movie implements Serializable {
     private UUID id;
@@ -20,6 +21,12 @@ public class Movie implements Serializable {
     private LocalDate releaseDate;
     private List<Genre> genres;
 
+    public Movie(String title){
+        this.id = UUID.randomUUID();
+        this.title = title;
+        this.releaseDate = LocalDate.now();
+        this.genres = Collections.emptyList();
+    }
     public Movie(String title, LocalDate releaseDate) {
         this.id = UUID.randomUUID();
         this.title = title;

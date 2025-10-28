@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                template="/template/main.xhtml">
+    <f:metadata>
+        <f:viewParam name="id" value="#{userDetailsView.id}" required="true"/>
+        <f:viewAction action="#{userDetailsView.loadUser}"/>
+    </f:metadata>
+
+    <ui:define name="head">
+<!--        <h:outputStylesheet library="css" name="main.css"/>-->
+        <h:outputStylesheet library="css" name="view/view_list.css"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <article class="user-details">
+            <header><h2><h:outputText value="#{userDetailsView.user.username}"/></h2></header>
+            <div class="container mt-4">
+                <div class="row">
+                    <!-- User info -->
+                    <div class="col-md-4">
+                        <div class="info-row mb-3">
+                            <div class="label">Registration date:</div>
+                            <div class="value">
+                                <h:outputText value="#{userDetailsView.user.registrationDate}" />
+                            </div>
+                        </div>
+
+                        <!-- Avatar -->
+                        <div class="avatar mt-3 text-center">
+                            <h:graphicImage alt="User avatar"
+                                            styleClass="img-fluid rounded shadow-sm"
+                                            value="/api/users/#{userDetailsView.id}/avatar" />
+                        </div>
+                    </div>
+
+                    <!-- Movie list -->
+                    <div class="col-md-8">
+                        <h3>Owned Movies</h3>
+
+                        <h:panelGroup rendered="#{not empty userDetailsView.user.ownedMovies}">
+                            <h:dataTable value="#{userDetailsView.user.ownedMovies}" var="m"
+                                         styleClass="table table-striped table-bordered mt-3">
+                                <h:column>
+                                    <f:facet name="header">Movie Title</f:facet>
+                                    <h:link outcome="movie_details" value="#{m.title}">
+                                        <f:param name="userId" value="#{userDetailsView.user.id}"/>
+                                        <f:param name="movieId" value="#{m.id}"/>
+                                    </h:link>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Release Date</f:facet>
+                                    <h:link outcome="movie_details" value="#{m.releaseDate}">
+                                        <f:param name="userId" value="#{userDetailsView.user.id}"/>
+                                        <f:param name="movieId" value="#{m.id}"/>
+                                    </h:link>
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Action</f:facet>
+                                    <h:form>
+                                        <h:commandButton value="Delete"
+                                                         action="#{userDetailsView.deleteMovie(m.id)}"
+                                                         styleClass="btn btn-danger btn-sm"/>
+                                    </h:form>
+                                </h:column>
+                            </h:dataTable>
+                        </h:panelGroup>
+
+                        <h:panelGroup rendered="#{empty userDetailsView.user.ownedMovies}">
+                            <p>No movies owned by this user.</p>
+                        </h:panelGroup>
+
+                        <!-- Navigation -->
+                        <div class="mt-3">
+                            <h:link outcome="user_list" value="← Back to Users"
+                                    styleClass="btn btn-secondary btn-sm"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </ui:define>
+
+</ui:composition>

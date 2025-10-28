@@ -18,6 +18,7 @@ public class UserService {
         users.add(User.builder()
                 .id(UUID.fromString("4e8d7e31-1b9e-4882-a917-5d765c08493f"))
                 .username("Michael B. Jordan")
+                .registrationDate(LocalDate.now())
                 .ownedMovies(List.of(
                         new Movie("Creed", LocalDate.of(2015, 11, 25)),
                         new Movie("Black Panther", LocalDate.of(2018, 2, 16))
@@ -26,6 +27,7 @@ public class UserService {
         users.add(User.builder()
                 .id(UUID.fromString("4128c40e-1a95-45db-84da-fb14ceb1c870"))
                 .username("Jeremy Strong")
+                .registrationDate(LocalDate.now())
                 .ownedMovies(List.of(
                         new Movie("The Trial of the Chicago 7", LocalDate.of(2020, 9, 25))
                 ))
@@ -33,6 +35,7 @@ public class UserService {
         users.add(User.builder()
                 .id(UUID.fromString("791368b3-31ca-43ff-a327-26fc0f1adea3"))
                 .username("Mikey Madison")
+                .registrationDate(LocalDate.now())
                 .ownedMovies(List.of(
                         new Movie("Once Upon a Time in Hollywood", LocalDate.of(2019, 7, 26)),
                         new Movie("Anora", LocalDate.of(2024, 11, 1))
@@ -41,6 +44,7 @@ public class UserService {
         users.add(User.builder()
                 .id(UUID.fromString("8100b921-4b6b-4362-b9d4-53c3fd64896f"))
                 .username("Ayo Edebiri")
+                .registrationDate(LocalDate.now())
                 .ownedMovies(List.of(
                         new Movie("The Bear", LocalDate.of(2022, 6, 23))
                 ))
@@ -64,22 +68,32 @@ public class UserService {
         return user;
     }
 
-    public User update(User user) {
-        if (user.getId() == null) {
-            user.setId(UUID.randomUUID());
+    public User update(User updatedUser) {
+        if (updatedUser.getId() == null) {
+            throw new IllegalArgumentException("User ID cannot be null for update");
         }
 
-        // Remove existing user first
-        boolean userRemoved = users.removeIf(u -> u.getId().equals(user.getId()));
-        if (!userRemoved) {
-            throw new NoSuchElementException("User not found with ID: " + user.getId());
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).getId().equals(updatedUser.getId())) {
+                users.set(i, updatedUser);
+                return updatedUser;
+            }
         }
-
-        users.add(user);
-        return user;
+        throw new NoSuchElementException("User not found with ID: " + updatedUser.getId());
     }
 
     public boolean delete(UUID id) {
         return users.removeIf(user -> user.getId().equals(id));
+    }
+
+    public void deleteMovie(UUID userId, UUID movieId) {
+        User user = getById(userId);
+        if (user != null) {
+            user.getOwnedMovies().removeIf(m -> m.getId().equals(movieId));
+        }
+    }
+
+    public void deleteAll() {
+        users.clear();
     }
 }

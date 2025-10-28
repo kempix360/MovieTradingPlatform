@@ -1,0 +1,64 @@
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.data-table th, .data-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.btn {
+    padding: 4px 10px;
+    margin: 0 4px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #b02a37;
+}
+
+/* 🎯 Make the page-specific h2 white */
+.user-details h2 {
+    color: white !important; /* Overrides purple from main.css */
+}
+
+/* 🎯 Purple table headers */
+.user-details th {
+    background-color: #6f42c1;  /* A rich purple */
+    color: white;               /* Text color for contrast */
+    text-align: left;
+    padding: 10px;
+}
+
+/* Optional — style the table itself */
+.user-details .table {
+    background-color: #f8f9fa;
+    border-collapse: collapse;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* Optional — zebra stripe for rows */
+.user-details .table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Optional — adjust buttons and spacing */
+.user-details .btn {
+    margin: 2px;
+}
+
+.user-header h2 {
+    color: white !important;
+    background-color: #512da8;
+    padding: 10px;
+}

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core">
+<f:view>
+    <h:head>
+        <meta charset="UTF-8"/>
+        <meta name="description" content="Movie trading platform written with Jakarta EE."/>
+        <meta name="keywords" content="MovieTradingPlatform"/>
+        <meta name="author" content="Maksymilian Kempa"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>MovieTradingPlatform</title>
+
+        <h:outputStylesheet library="webjars" name="mdb-ui-kit/6.4.0/css/mdb.min.css"/>
+        <h:outputStylesheet library="css" name="main.css"/>
+        <h:outputScript library="webjars" name="mdb-ui-kit/6.4.0/js/mdb.min.js"/>
+        <h:outputScript library="js" name="main.js" target="body"/>
+    </h:head>
+
+    <h:body>
+        <div class="container">
+            <header class="mb-4 mt-4">
+                <h1>MovieTradingPlatform</h1>
+            </header>
+
+            <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+                <div class="container-fluid">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <h:link styleClass="nav-link" outcome="/index.xhtml">Home</h:link>
+                        </li>
+                        <li class="nav-item">
+                            <h:link styleClass="nav-link" outcome="/view/category/category_list.xhtml">Browse Categories</h:link>
+                        </li>
+<!--                        <li class="nav-item">-->
+<!--                            <h:link styleClass="nav-link" outcome="/view/user/user_list.xhtml">Users</h:link>-->
+<!--                        </li>-->
+<!--                        <li class="nav-item">-->
+<!--                            <h:link styleClass="nav-link" outcome="/view/director/director_list.xhtml">Directors</h:link>-->
+<!--                        </li>-->
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="mb-4 mt-4">
+                <ui:insert name="content"/>
+            </main>
+
+            <footer class="text-center text-lg-start bg-light text-muted p-2">
+                <div class="text-center">
+                    Copyright &#169; 2025, Maksymilian Kempa
+                </div>
+            </footer>
+        </div>
+    </h:body>
+</f:view>
+</html>

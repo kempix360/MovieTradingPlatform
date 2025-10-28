@@ -1,0 +1,187 @@
+/* ------------------------------
+   Global Layout
+---------------------------------*/
+
+body {
+    background-color: #f9fafb;
+    font-family: 'Inter', 'Roboto', sans-serif;
+    color: #212529;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ------------------------------
+   Header
+---------------------------------*/
+
+header {
+    text-align: center;
+    padding: 1rem 0;
+    background: linear-gradient(90deg, #512da8, #673ab7);
+    color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 2.2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+header h2 {
+    font-size: 2.0rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* ------------------------------
+   Navigation Bar
+---------------------------------*/
+
+.navbar {
+    border-radius: 10px;
+    background: #fff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease-in-out;
+}
+
+.navbar .nav-link {
+    color: #512da8 !important;
+    font-weight: 500;
+    transition: color 0.3s, background 0.3s;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: #fff !important;
+    background: #512da8;
+    box-shadow: 0 2px 4px rgba(81, 45, 168, 0.4);
+}
+
+/* ------------------------------
+   Main Content
+---------------------------------*/
+
+main {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    max-width: 1000px;
+    margin: 2rem auto;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Headings */
+main h2, main h3 {
+    color: #512da8;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn-primary {
+    background: #512da8;
+    border: none;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    background: #673ab7;
+    box-shadow: 0 4px 8px rgba(81, 45, 168, 0.4);
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #673ab7;
+    color: #fff;
+    padding: 0.75rem;
+    text-align: left;
+}
+
+td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+tr:hover {
+    background-color: #f1f0ff;
+}
+
+/* ------------------------------
+   Footer
+---------------------------------*/
+
+footer {
+    background: #f5f5f5;
+    color: #666;
+    font-size: 0.9rem;
+    border-top: 1px solid #e9ecef;
+    border-radius: 10px;
+    margin-top: auto;
+}
+
+footer div {
+    padding: 1rem;
+}
+
+/* ------------------------------
+   Utility Classes
+---------------------------------*/
+
+.text-purple {
+    color: #512da8 !important;
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #b39ddb;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #9575cd;
+}

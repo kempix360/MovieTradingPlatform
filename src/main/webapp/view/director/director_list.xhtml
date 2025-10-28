@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                template="/template/main.xhtml">
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="main.css"/>
+        <h:outputStylesheet library="css" name="view/view_list.css"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <h2>All Directors</h2>
+
+        <h:panelGroup rendered="#{empty directorListView.directors}">
+            <p>No directors available.</p>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{not empty directorListView.directors}">
+            <h:dataTable value="#{directorListView.directors}" var="d" border="1" styleClass="data-table">
+                <h:column>
+                    <f:facet name="header">Name</f:facet>
+                    #{d.name}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Description</f:facet>
+                    #{d.description}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
+                    <h:link outcome="director_details" value="View">
+                        <f:param name="id" value="#{d.id}"/>
+                    </h:link>
+                    <h:link outcome="/view/director/director_edit.xhtml"
+                            value="Edit"
+                            styleClass="btn btn-warning btn-sm">
+                        <f:param name="id" value="#{d.id}"/>
+                    </h:link>
+                    <h:form>
+                        <h:commandButton value="Delete"
+                                         action="#{directorListView.deleteDirector(d.id)}"
+                                         styleClass="btn btn-danger btn-sm"/>
+                    </h:form>
+                </h:column>
+            </h:dataTable>
+        </h:panelGroup>
+        <h:link outcome="/view/director/director_create.xhtml"
+                value="Add New Director"
+                styleClass="btn btn-primary mt-3"/>
+    </ui:define>
+</ui:composition>

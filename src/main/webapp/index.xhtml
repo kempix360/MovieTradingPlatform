@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                template="/template/main.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="main.css"/>
+        <h:outputStylesheet library="css" name="home.css"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <section class="home-section text-center">
+            <div class="container py-5">
+
+                <!-- Hero Header -->
+                <div class="mb-5">
+                    <h1 class="display-4 fw-bold text-primary mb-3 animate-fadein">
+                        Welcome to MovieTradingPlatform
+                    </h1>
+                    <p class="lead text-muted">
+                        Discover, trade, and manage your favorite movies — all in one place.
+                    </p>
+                </div>
+
+                <!-- Feature Cards -->
+                <div class="row justify-content-center g-4">
+                    <div class="col-md-4">
+                        <div class="card feature-card shadow-sm border-0 h-100">
+                            <div class="card-body">
+                                <h5 class="card-title text-purple">🎬 Browse Users</h5>
+                                <p class="card-text text-muted">
+                                    View users, explore their collections, and manage their details.
+                                </p>
+                                <h:link outcome="/view/user/user_list" styleClass="btn btn-primary">View Users</h:link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card feature-card shadow-sm border-0 h-100">
+                            <div class="card-body">
+                                <h5 class="card-title text-purple">🎥 Manage Directors</h5>
+                                <p class="card-text text-muted">
+                                    Add or modify directors and connect them with movies they’ve created.
+                                </p>
+                                <h:link outcome="/view/director/director_list" styleClass="btn btn-primary">View Directors</h:link>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </ui:define>
+</ui:composition>

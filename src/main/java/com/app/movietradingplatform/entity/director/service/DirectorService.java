@@ -2,6 +2,7 @@ package com.app.movietradingplatform.entity.director.service;
 
 import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.movie.Movie;
+import com.app.movietradingplatform.entity.user.User;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -87,5 +88,16 @@ public class DirectorService {
 
     public boolean delete(UUID id) {
         return directors.removeIf(director -> director.getId().equals(id));
+    }
+
+    public void deleteMovie(UUID directorId, UUID movieId) {
+        Director director = getById(directorId);
+        if (director != null) {
+            director.getMovies().removeIf(m -> m.getId().equals(movieId));
+        }
+    }
+
+    public void deleteAll() {
+        directors.clear();
     }
 }

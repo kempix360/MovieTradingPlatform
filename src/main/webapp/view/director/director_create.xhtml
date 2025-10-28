@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                template="/template/main.xhtml">
+
+    <ui:define name="head">
+        <h:outputStylesheet library="css" name="main.css"/>
+        <h:outputStylesheet library="css" name="form.css"/>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form id="directorForm" styleClass="form-container" prependId="false">
+            <h2>Add New Director</h2>
+
+            <!-- Name -->
+            <div class="form-group mb-3">
+                <h:outputLabel for="directorname" value="Name:"/>
+                <h:inputText id="directorname" value="#{directorCreateView.director.name}"
+                             required="true" requiredMessage="directorname is required"
+                             styleClass="form-control"/>
+                <h:message for="directorname" styleClass="text-danger"/>
+            </div>
+
+            <!-- Registration date -->
+            <div class="form-group mb-3">
+                <h:outputLabel for="registrationDate" value="Description:"/>
+                <h:inputText id="registrationDate" value="#{directorCreateView.director.description}"
+                             styleClass="form-control">
+                </h:inputText>
+                <h:message for="registrationDate" styleClass="text-danger"/>
+            </div>
+
+            <!-- Movies Section -->
+            <h:panelGroup id="movieContainer">
+                <!-- Movie List -->
+                <h:panelGroup id="movieList">
+                    <h3 class="mt-4">Movies</h3>
+                    <h:dataTable value="#{directorCreateView.director.movies}" var="movie"
+                                 styleClass="table table-striped mt-3"
+                                 rendered="#{not empty directorCreateView.director.movies}">
+                        <h:column>
+                            <f:facet name="header">Title</f:facet>
+                            #{movie.title}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Release Date</f:facet>
+                            <h:outputText value="#{movie.releaseDate}">
+                                <f:convertDateTime pattern="yyyy-MM-dd"/>
+                            </h:outputText>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Action</f:facet>
+                            <h:commandButton value="Remove"
+                                             action="#{directorCreateView.removeMovie(movie)}"
+                                             styleClass="btn btn-danger btn-sm">
+                                <f:ajax render="movieList"/>
+                            </h:commandButton>
+                        </h:column>
+                    </h:dataTable>
+                    <h:outputText value="No movies added"
+                                  rendered="#{empty directorCreateView.director.movies}"
+                                  styleClass="text-muted"/>
+                </h:panelGroup>
+
+                <!-- Movie Form - Only show when toggled -->
+                <h:panelGroup id="movieForm" rendered="#{directorCreateView.showMovieForm}">
+                    <div class="movie-form mt-3 p-3 border rounded bg-light">
+                        <h4>Add Movie</h4>
+
+                        <div class="form-group mb-2">
+                            <h:outputLabel for="movieTitle" value="Title:"/>
+                            <h:inputText id="movieTitle" value="#{directorCreateView.newMovie.title}"
+                                         required="true" requiredMessage="Movie title is required"
+                                         styleClass="form-control"/>
+                            <h:message for="movieTitle" styleClass="text-danger"/>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <h:outputLabel for="releaseDate" value="Release Date:"/>
+                            <h:inputText id="releaseDate" value="#{directorCreateView.newMovie.releaseDate}"
+                                         required="true" requiredMessage="Release date is required"
+                                         styleClass="form-control">
+                                <f:convertDateTime pattern="yyyy-MM-dd"/>
+                            </h:inputText>
+                            <h:message for="releaseDate" styleClass="text-danger"/>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <h:commandButton value="Add Movie"
+                                             action="#{directorCreateView.addMovie}"
+                                             styleClass="btn btn-success">
+                                <f:ajax execute="movieTitle releaseDate"
+                                        render="movieList movieForm toggleMovieFormBtn"/>
+                            </h:commandButton>
+
+                            <h:commandButton value="Cancel"
+                                             action="#{directorCreateView.toggleMovieForm}"
+                                             styleClass="btn btn-secondary"
+                                             immediate="true">
+                                <f:ajax render="movieForm toggleMovieFormBtn"/>
+                            </h:commandButton>
+                        </div>
+                    </div>
+                </h:panelGroup>
+            </h:panelGroup>
+
+            <!-- Toggle Movie Form Button -->
+            <h:commandButton id="toggleMovieFormBtn"
+                             value="#{directorCreateView.showMovieForm ? 'Cancel' : 'Add Movie'}"
+                             action="#{directorCreateView.toggleMovieForm}"
+                             styleClass="btn btn-secondary mt-3"
+                             rendered="#{!directorCreateView.showMovieForm}">
+                <f:ajax render="movieForm toggleMovieFormBtn"/>
+            </h:commandButton>
+
+            <!-- Buttons -->
+            <div class="mt-4">
+                <h:commandButton value="Add director"
+                                 action="#{directorCreateView.save}"
+                                 styleClass="btn btn-success"/>
+                <h:link value="Cancel"
+                        outcome="/view/director/director_list.xhtml?faces-redirect=true"
+                        styleClass="btn btn-secondary ms-2"/>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
