@@ -2,12 +2,14 @@ package com.app.movietradingplatform.entity.director.view;
 
 import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -31,5 +33,15 @@ public class DirectorDetailsView implements Serializable {
     public String deleteMovie(UUID movieId) {
         directorService.deleteMovie(id, movieId);
         return "director_details?faces-redirect=true&amp;id=" + id;
+    }
+
+    public void redirectIfDirectorIsNull() {
+        if (id == null || director == null) {
+            try {
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/view/director/director_list.xhtml");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

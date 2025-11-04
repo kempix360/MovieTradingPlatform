@@ -2,39 +2,51 @@
                 xmlns:ui="jakarta.faces.facelets"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
-                template="/WEB-INF/template/main.xhtml">
+                template="/template/main.xhtml">
 
     <f:metadata>
-        <f:viewParam name="userId" value="#{movieDetailsView.userId}"/>
-        <f:viewParam name="movieId" value="#{movieDetailsView.movieId}"/>
-        <f:viewAction action="#{movieDetailsView.loadMovie}"/>
+        <f:viewParam name="directorId" value="#{movieDetailsView.directorId}" required="true"/>
+        <f:viewParam name="movieId" value="#{movieDetailsView.movieId}" required="true"/>
+        <f:viewAction action="#{movieDetailsView.loadMovie()}"/>
+        <f:event type="preRenderView" listener="#{movieDetailsView.redirectIfDirectorIsNull}" />
+        <f:event type="preRenderView" listener="#{movieDetailsView.redirectIfMovieIsNull}" />
     </f:metadata>
 
-    <ui:define name="head">
-        <h:outputStylesheet library="css" name="main.css"/>
-        <h:outputStylesheet library="css" name="movie.css"/>
-    </ui:define>
-
     <ui:define name="content">
-        <h:panelGroup rendered="#{not empty movieDetailsView.movie}">
-            <section class="movie-details">
-                <header>
-                    <h2>Movie Details</h2>
-                </header>
+        <article>
+            <header>
+                <h2><h:outputText value="#{movieDetailsView.movie.title}"/></h2>
+            </header>
+            <div class="container">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <strong>Release Date:</strong>
+                            </div>
+                            <div class="col-6">
+                                <h:outputText value="#{movieDetailsView.movie.releaseDate}"/>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                <strong>Genres:</strong>
+                            </div>
+                            <div class="col-6">
+                                <h:outputText value="#{movieDetailsView.movie.genres}"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <p><b>Title:</b> #{movieDetailsView.movie.title}</p>
-                <p><b>Movie ID:</b> #{movieDetailsView.movie.id}</p>
-
-                <br/>
-                <h:link outcome="user_details" value="← Back to User">
-                    <f:param name="id" value="#{movieDetailsView.userId}"/>
-                </h:link>
-            </section>
-        </h:panelGroup>
-
-        <h:panelGroup rendered="#{empty movieDetailsView.movie}">
-            <p>Movie not found.</p>
-            <h:link outcome="user_list" value="Back to users"/>
-        </h:panelGroup>
+                <div class="mt-3">
+                    <h:link outcome="/view/director/director_details"
+                            value="← Back to Director"
+                            styleClass="btn btn-secondary">
+                        <f:param name="id" value="#{movieDetailsView.directorId}"/>
+                    </h:link>
+                </div>
+            </div>
+        </article>
     </ui:define>
 </ui:composition>

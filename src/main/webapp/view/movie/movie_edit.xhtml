@@ -8,43 +8,46 @@
         <h:outputStylesheet library="css" name="form.css"/>
     </ui:define>
 
-    <!-- Load director using f:viewParam and f:viewAction -->
     <f:metadata>
-        <f:viewParam name="directorId" value="#{movieCreateView.directorId}" required="true"/>
-        <f:viewAction action="#{movieCreateView.loadDirector}" />
-        <f:event type="preRenderView" listener="#{movieCreateView.redirectIfDirectorIsNull}" />
+        <f:viewParam name="directorId" value="#{movieEditView.directorId}" required="true"/>
+        <f:viewParam name="movieId" value="#{movieEditView.movieId}" />
+        <f:viewAction action="#{movieEditView.loadMovie()}" />
+        <f:event type="preRenderView" listener="#{movieEditView.redirectIfDirectorIsNull}" />
+        <f:event type="preRenderView" listener="#{movieEditView.redirectIfMovieIsNull}" />
     </f:metadata>
 
     <ui:define name="content">
         <article class="container mt-4">
             <header>
-                <h2>Add a New Movie for <h:outputText value="#{movieCreateView.director.name}"/></h2>
+                <h2>
+                    <h:outputText value="#{'Edit Movie'}"/>
+                </h2>
             </header>
 
             <h:form styleClass="mt-3">
                 <h:panelGrid columns="2" columnClasses="col-3,col-9" styleClass="mb-3">
 
                     <h:outputLabel for="title" value="Title:"/>
-                    <h:inputText id="title" value="#{movieCreateView.movie.title}" required="true"/>
+                    <h:inputText id="title" value="#{movieEditView.movie.title}" required="true"/>
 
                     <h:outputLabel for="releaseDate" value="Release Date:"/>
-                    <h:inputText id="releaseDate" value="#{movieCreateView.movie.releaseDate}" required="true"/>
+                    <h:inputText id="releaseDate" value="#{movieEditView.movie.releaseDate}" required="true"/>
 
                     <h:outputLabel for="genres" value="Genres:"/>
-                    <h:selectManyCheckbox id="genres" value="#{movieCreateView.movie.genres}" layout="pageDirection">
-                        <f:selectItems value="#{movieCreateView.availableGenres}" var="g"
+                    <h:selectManyCheckbox id="genres" value="#{movieEditView.movie.genres}" layout="pageDirection">
+                        <f:selectItems value="#{movieEditView.availableGenres}" var="g"
                                        itemValue="#{g}" itemLabel="#{g}"/>
                     </h:selectManyCheckbox>
                 </h:panelGrid>
 
                 <div class="mt-3">
-                    <h:commandButton value="Add Movie"
-                                     action="#{movieCreateView.saveMovie}"
+                    <h:commandButton value="Update Movie"
+                                     action="#{movieEditView.updateMovie}"
                                      styleClass="btn btn-success me-2"/>
                     <h:link outcome="/view/director/director_details"
                             value="Cancel"
                             styleClass="btn btn-secondary">
-                        <f:param name="id" value="#{movieCreateView.director.id}"/>
+                        <f:param name="id" value="#{movieEditView.director.id}"/>
                     </h:link>
                 </div>
             </h:form>

@@ -5,7 +5,7 @@
                 template="/template/main.xhtml">
     <ui:define name="head">
         <h:outputStylesheet library="css" name="main.css"/>
-        <h:outputStylesheet library="css" name="view/view_list.css"/>
+        <h:outputStylesheet library="css" name="view_list.css"/>
     </ui:define>
 
     <ui:define name="content">
@@ -30,11 +30,6 @@
                     <h:link outcome="director_details" value="View">
                         <f:param name="id" value="#{d.id}"/>
                     </h:link>
-                    <h:link outcome="/view/director/director_edit.xhtml"
-                            value="Edit"
-                            styleClass="btn btn-warning btn-sm">
-                        <f:param name="id" value="#{d.id}"/>
-                    </h:link>
                     <h:form>
                         <h:commandButton value="Delete"
                                          action="#{directorListView.deleteDirector(d.id)}"
@@ -43,8 +38,5 @@
                 </h:column>
             </h:dataTable>
         </h:panelGroup>
-        <h:link outcome="/view/director/director_create.xhtml"
-                value="Add New Director"
-                styleClass="btn btn-primary mt-3"/>
     </ui:define>
 </ui:composition>

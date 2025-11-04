@@ -4,8 +4,8 @@
                 xmlns:f="jakarta.faces.core"
                 template="/template/main.xhtml">
     <ui:define name="head">
-        <h:outputStylesheet library="css" name="main.css"/>
-        <h:outputStylesheet library="css" name="view/view_list.css"/>
+<!--        <h:outputStylesheet library="css" name="main.css"/>-->
+<!--        <h:outputStylesheet library="css" name="view_list.css"/>-->
     </ui:define>
 
     <ui:define name="content">
@@ -28,11 +28,6 @@
                 <h:column>
                     <f:facet name="header">Actions</f:facet>
                     <h:link outcome="user_details" value="View">
-                        <f:param name="id" value="#{u.id}"/>
-                    </h:link>
-                    <h:link outcome="/view/user/user_edit.xhtml"
-                            value="Edit"
-                            styleClass="btn btn-warning btn-sm">
                         <f:param name="id" value="#{u.id}"/>
                     </h:link>
                     <h:form>
