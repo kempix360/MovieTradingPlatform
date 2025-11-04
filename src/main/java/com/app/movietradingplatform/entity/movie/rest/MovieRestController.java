@@ -1,20 +1,18 @@
-package com.app.movietradingplatform.entity.movie.controller;
+package com.app.movietradingplatform.entity.movie.rest;
+
 
 import com.app.movietradingplatform.entity.director.service.DirectorService;
 import com.app.movietradingplatform.entity.movie.Movie;
 import jakarta.inject.Inject;
-
-import java.util.UUID;
-
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import java.net.URI;
 import java.util.*;
 
-@Path("/api/directors/{directorId}/movies")
+@Path("/directors/{directorId}/movies")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class MovieController {
+public class MovieRestController {
 
     @Inject
     DirectorService directorService;

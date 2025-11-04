@@ -43,7 +43,7 @@ public class MovieCreateView implements Serializable {
     public String saveMovie() {
         assert director != null;
         director.addMovie(movie);
-        directorService.update(director);
+        directorService.update(directorId, director);
         movieService.save(movie);
         return "/view/director/director_details.xhtml?faces-redirect=true&id=" + director.getId();
     }

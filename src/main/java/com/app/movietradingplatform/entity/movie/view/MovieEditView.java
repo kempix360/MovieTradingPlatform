@@ -55,7 +55,7 @@ public class MovieEditView implements Serializable {
         director.getMovies().removeIf(m -> m.getId().equals(movie.getId()));
         director.getMovies().add(movie);
 
-        directorService.update(director);
+        directorService.update(directorId, director);
         return "/view/director/director_details.xhtml?faces-redirect=true&id=" + director.getId();
     }
 

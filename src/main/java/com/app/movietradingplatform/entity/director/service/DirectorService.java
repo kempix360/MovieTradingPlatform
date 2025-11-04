@@ -73,33 +73,65 @@ public class DirectorService {
         return director;
     }
 
-    public Director update(Director director) {
+    public Director update(UUID id, Director director) {
         if (director.getId() == null) {
-            director.setId(UUID.randomUUID());
+            director.setId(id);
         }
 
-        // Remove existing director first
-        boolean directorRemoved = directors.removeIf(d -> d.getId().equals(director.getId()));
-        if (!directorRemoved) {
-            throw new NoSuchElementException("Director not found with ID: " + director.getId());
+        Director existing = getById(id);
+
+        if (existing == null) {
+            // create new if not found
+            director.setId(id);
+            directors.add(director);
+            return director;
         }
 
-        directors.add(director);
-        return director;
+        existing.setName(director.getName());
+        existing.setDescription(director.getDescription());
+        existing.setMovies(director.getMovies());
+        return existing;
     }
 
     public boolean delete(UUID id) {
         return directors.removeIf(director -> director.getId().equals(id));
     }
 
-    public void deleteMovie(UUID directorId, UUID movieId) {
-        Director director = getById(directorId);
-        if (director != null) {
-            director.getMovies().removeIf(m -> m.getId().equals(movieId));
-        }
-    }
-
     public void deleteAll() {
         directors.clear();
+    }
+
+    public List<Movie> getMovies(UUID directorId) {
+        Director d = getById(directorId);
+        if (d == null) throw new NoSuchElementException("Director not found: " + directorId);
+        return d.getMovies();
+    }
+
+    public Movie getMovie(UUID directorId, UUID movieId) {
+        return getMovies(directorId).stream()
+                .filter(m -> m.getId().equals(movieId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Movie not found: " + movieId));
+    }
+
+    public Movie createMovie(UUID directorId, Movie movie) {
+        Director d = getById(directorId);
+        if (d == null) throw new NoSuchElementException("Director not found: " + directorId);
+        movie.setId(UUID.randomUUID());
+        d.getMovies().add(movie);
+        return movie;
+    }
+
+    public Movie updateMovie(UUID directorId, UUID movieId, Movie updated) {
+        Movie movie = getMovie(directorId, movieId);
+        movie.setTitle(updated.getTitle());
+        movie.setReleaseDate(updated.getReleaseDate());
+        return movie;
+    }
+
+    public void deleteMovie(UUID directorId, UUID movieId) {
+        Director d = getById(directorId);
+        if (d == null) throw new NoSuchElementException("Director not found: " + directorId);
+        d.getMovies().removeIf(m -> m.getId().equals(movieId));
     }
 }

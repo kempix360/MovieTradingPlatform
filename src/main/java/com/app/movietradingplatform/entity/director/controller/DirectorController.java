@@ -50,10 +50,10 @@ public class DirectorController {
         }
     }
 
-    public void updateDirector(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public void updateDirector(UUID id, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             Director director = jsonb.fromJson(req.getReader(), Director.class);
-            Director updatedDirector = directorService.update(director);
+            Director updatedDirector = directorService.update(id, director);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.setContentType("application/json");
             jsonb.toJson(updatedDirector, resp.getWriter());
