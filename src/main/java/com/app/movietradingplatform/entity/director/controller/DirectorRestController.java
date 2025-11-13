@@ -18,12 +18,12 @@ public class DirectorRestController {
 
     @GET
     public Response list() {
-        return Response.ok(directorService.getAll()).build();
+        return Response.ok(directorService.findAll()).build();
     }
 
     @POST
     public Response create(Director director, @Context UriInfo uriInfo) {
-        Director created = directorService.save(director);
+        Director created = directorService.create(director);
         URI uri = uriInfo.getAbsolutePathBuilder().path(created.getId().toString()).build();
         return Response.created(uri).entity(created).build();
     }
@@ -31,8 +31,8 @@ public class DirectorRestController {
     @GET
     @Path("{id}")
     public Response get(@PathParam("id") String id) {
-        Director d = directorService.getById(UUID.fromString(id));
-        if (d == null) return Response.status(Response.Status.NOT_FOUND).build();
+        Optional<Director> d = directorService.find(UUID.fromString(id));
+        if (d.isEmpty()) return Response.status(Response.Status.NOT_FOUND).build();
         return Response.ok(d).build();
     }
 
@@ -40,7 +40,8 @@ public class DirectorRestController {
     @Path("{id}")
     public Response update(@PathParam("id") String id, Director director) {
         try {
-            Director updated = directorService.update(UUID.fromString(id), director);
+            director.setId(UUID.fromString(id));
+            Director updated = directorService.update(director);
             return Response.ok(updated).build();
         } catch (NoSuchElementException e) {
             return Response.status(Response.Status.NOT_FOUND).entity(Map.of("error", e.getMessage())).build();
@@ -51,6 +52,16 @@ public class DirectorRestController {
     @Path("{id}")
     public Response delete(@PathParam("id") String id) {
         directorService.delete(UUID.fromString(id));
+        return Response.noContent().build();
+    }
+
+    @DELETE
+    public Response deleteAll() {
+        List<Director> all = directorService.findAll();
+        if (all.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        directorService.deleteAll();
         return Response.noContent().build();
     }
 }
