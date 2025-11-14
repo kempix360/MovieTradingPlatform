@@ -1,99 +1,64 @@
 package com.app.movietradingplatform.entity.user.service;
 
-import com.app.movietradingplatform.entity.movie.Movie;
 import com.app.movietradingplatform.entity.user.User;
+import com.app.movietradingplatform.entity.user.repository.UserRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 @ApplicationScoped
+@NoArgsConstructor
 public class UserService {
-    private final List<User> users = new ArrayList<>();
+    private UserRepository userRepository;
 
     @Inject
-    public UserService() {
-        // Load test users
-        users.add(User.builder()
-                .id(UUID.fromString("4e8d7e31-1b9e-4882-a917-5d765c08493f"))
-                .username("Michael B. Jordan")
-                .registrationDate(LocalDate.now())
-                .ownedMovies(List.of(
-                        new Movie("Creed", LocalDate.of(2015, 11, 25)),
-                        new Movie("Black Panther", LocalDate.of(2018, 2, 16))
-                ))
-                .build());
-        users.add(User.builder()
-                .id(UUID.fromString("4128c40e-1a95-45db-84da-fb14ceb1c870"))
-                .username("Jeremy Strong")
-                .registrationDate(LocalDate.now())
-                .ownedMovies(List.of(
-                        new Movie("The Trial of the Chicago 7", LocalDate.of(2020, 9, 25))
-                ))
-                .build());
-        users.add(User.builder()
-                .id(UUID.fromString("791368b3-31ca-43ff-a327-26fc0f1adea3"))
-                .username("Mikey Madison")
-                .registrationDate(LocalDate.now())
-                .ownedMovies(List.of(
-                        new Movie("Once Upon a Time in Hollywood", LocalDate.of(2019, 7, 26)),
-                        new Movie("Anora", LocalDate.of(2024, 11, 1))
-                ))
-                .build());
-        users.add(User.builder()
-                .id(UUID.fromString("8100b921-4b6b-4362-b9d4-53c3fd64896f"))
-                .username("Ayo Edebiri")
-                .registrationDate(LocalDate.now())
-                .ownedMovies(List.of(
-                        new Movie("The Bear", LocalDate.of(2022, 6, 23))
-                ))
-                .build());
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public List<User> getAll() { return new ArrayList<>(users); }
-
-    public User getById(UUID id) {
-        return users.stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
-    public User save(User user) {
-        if (user.getId() == null) {
-            user.setId(UUID.randomUUID());
-        }
-        users.add(user);
+    public Optional<User> find(UUID id) {
+        return userRepository.find(id);
+    }
+
+    @Transactional
+    public User create(User user) {
+        userRepository.create(user);
         return user;
     }
 
-    public User update(User updatedUser) {
-        if (updatedUser.getId() == null) {
-            throw new IllegalArgumentException("User ID cannot be null for update");
-        }
-
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getId().equals(updatedUser.getId())) {
-                users.set(i, updatedUser);
-                return updatedUser;
-            }
-        }
-        throw new NoSuchElementException("User not found with ID: " + updatedUser.getId());
+    @Transactional
+    public User update(User user) {
+        userRepository.update(user);
+        return user;
     }
 
-    public boolean delete(UUID id) {
-        return users.removeIf(user -> user.getId().equals(id));
+    @Transactional
+    public void delete(UUID id) {
+        userRepository.delete(userRepository.find(id).orElseThrow());
     }
 
-    public void deleteMovie(UUID userId, UUID movieId) {
-        User user = getById(userId);
-        if (user != null) {
-            user.getOwnedMovies().removeIf(m -> m.getId().equals(movieId));
-        }
-    }
-
+    @Transactional
     public void deleteAll() {
-        users.clear();
+        userRepository.deleteAll();
+    }
+
+    public void updateAvatar(UUID id, InputStream is) {
+        userRepository.find(id).ifPresent(user -> {
+            try {
+                user.setAvatar(is.readAllBytes());
+                userRepository.update(user);
+            } catch (IOException ex) {
+                throw new IllegalStateException(ex);
+            }
+        });
     }
 }

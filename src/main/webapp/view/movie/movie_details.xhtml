@@ -5,10 +5,9 @@
                 template="/template/main.xhtml">
 
     <f:metadata>
+        <f:viewParam name="movieId" value="#{movieDetailsView.id}" required="true"/>
         <f:viewParam name="directorId" value="#{movieDetailsView.directorId}" required="true"/>
-        <f:viewParam name="movieId" value="#{movieDetailsView.movieId}" required="true"/>
-        <f:viewAction action="#{movieDetailsView.loadMovie()}"/>
-        <f:event type="preRenderView" listener="#{movieDetailsView.redirectIfDirectorIsNull}" />
+        <f:viewAction action="#{movieDetailsView.loadMovie}" />
         <f:event type="preRenderView" listener="#{movieDetailsView.redirectIfMovieIsNull}" />
     </f:metadata>
 

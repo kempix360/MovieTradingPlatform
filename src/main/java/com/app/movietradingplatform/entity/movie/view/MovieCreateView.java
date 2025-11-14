@@ -14,10 +14,7 @@ import lombok.Setter;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -36,15 +33,13 @@ public class MovieCreateView implements Serializable {
 
     public void loadDirector() {
         if (directorId != null) {
-            director = directorService.getById(directorId);
+            Optional<Director> d = directorService.find(directorId);
+            director = d.orElse(null);
         }
     }
 
-    public String saveMovie() {
-        assert director != null;
-        director.addMovie(movie);
-        directorService.update(directorId, director);
-        movieService.save(movie);
+    public String createMovie() {
+        movieService.createMovieForDirector(directorId, movie);
         return "/view/director/director_details.xhtml?faces-redirect=true&id=" + director.getId();
     }
 
@@ -53,7 +48,7 @@ public class MovieCreateView implements Serializable {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/view/director/director_list.xhtml");
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }

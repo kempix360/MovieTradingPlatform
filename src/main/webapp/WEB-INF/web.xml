@@ -7,7 +7,7 @@
     <!-- Avatar directory configuration -->
     <context-param>
         <param-name>avatarDir</param-name>
-        <param-value>/temp/avatars</param-value>
+        <param-value>com/app/movietradingplatform/avatars</param-value>
     </context-param>
 
     <context-param>

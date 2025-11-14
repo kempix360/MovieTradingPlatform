@@ -1,0 +1,45 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                template="/template/main.xhtml">
+    <ui:define name="head">
+<!--        <h:outputStylesheet library="css" name="main.css"/>-->
+<!--        <h:outputStylesheet library="css" name="view_list.css"/>-->
+    </ui:define>
+
+    <ui:define name="content">
+        <h2>All Users</h2>
+
+        <h:panelGroup rendered="#{empty userListView.users}">
+            <p>No users available.</p>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{not empty userListView.users}">
+            <h:dataTable value="#{userListView.users}" var="u" border="1" styleClass="data-table">
+                <h:column>
+                    <f:facet name="header">Username</f:facet>
+                    #{u.username}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Registration Date</f:facet>
+                    #{u.registrationDate}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Actions</f:facet>
+                    <h:link outcome="user_details" value="View">
+                        <f:param name="id" value="#{u.id}"/>
+                    </h:link>
+                    <h:form>
+                        <h:commandButton value="Delete"
+                                         action="#{userListView.deleteUser(u.id)}"
+                                         styleClass="btn btn-danger btn-sm"/>
+                    </h:form>
+                </h:column>
+            </h:dataTable>
+        </h:panelGroup>
+        <h:link outcome="/view/user/user_create.xhtml"
+                value="Add New User"
+                styleClass="btn btn-primary mt-3"/>
+    </ui:define>
+</ui:composition>

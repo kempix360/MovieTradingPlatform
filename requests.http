@@ -2,18 +2,37 @@
 GET http://localhost:9080/MovieTradingPlatform/api/directors
 
 ### Get director
-GET http://localhost:9080/MovieTradingPlatform/api/directors/1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4e5b6b
+GET http://localhost:9080/MovieTradingPlatform/api/directors/4c54ab20-b701-4dc8-b7d2-f99f8c0a9d45
 
 ### Create new director
 POST http://localhost:9080/MovieTradingPlatform/api/directors
 Content-Type: application/json
 
 {
-  "name": "Quentin Tarantino"
+  "name": "Quentin Tarantino",
+  "description": "Crazy basterd"
+}
+
+### Create new director
+POST http://localhost:9080/MovieTradingPlatform/api/directors
+Content-Type: application/json
+
+{
+  "name": "Dennis Villeneuve",
+  "description": "Sci-fi master"
+}
+
+### Create new director
+POST http://localhost:9080/MovieTradingPlatform/api/directors
+Content-Type: application/json
+
+{
+  "name": "Sean Baker",
+  "description": "Indie king!"
 }
 
 ### Update director
-PUT http://localhost:9080/MovieTradingPlatform/api/directors/d05d382a-22f0-4cee-b029-d6f93002d914
+PUT http://localhost:9080/MovieTradingPlatform/api/directors/4ec5f341-d0fa-4e51-bf01-a6e773ca814e
 Content-Type: application/json
 
 {
@@ -21,10 +40,17 @@ Content-Type: application/json
 }
 
 ### Delete director
-DELETE http://localhost:9080/MovieTradingPlatform/api/directors/d05d382a-22f0-4cee-b029-d6f93002d914
+DELETE http://localhost:9080/MovieTradingPlatform/api/directors/4ec5f341-d0fa-4e51-bf01-a6e773ca814e
+
+
+### Get all movies for a director
+GET http://localhost:9080/MovieTradingPlatform/api/directors/afeb89ed-782d-4ceb-a13f-becb3e54742c/movies
+
+### Get specific movie for a director
+GET http://localhost:9080/MovieTradingPlatform/api/directors/afeb89ed-782d-4ceb-a13f-becb3e54742c/movies/905807bf-1a5f-40db-b557-03be5c2e7c98
 
 ### Add movie to director
-POST http://localhost:9080/MovieTradingPlatform/api/directors/1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4e5b6b/movies
+POST http://localhost:9080/MovieTradingPlatform/api/directors/afeb89ed-782d-4ceb-a13f-becb3e54742c/movies
 Content-Type: application/json
 
 {
@@ -34,7 +60,7 @@ Content-Type: application/json
 }
 
 ### Update movie
-PUT http://localhost:9080/MovieTradingPlatform/api/directors/1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4e5b6b/movies/385503c5-3266-4d2d-b107-4d569de4ef9e
+PUT http://localhost:9080/MovieTradingPlatform/api/directors/afeb89ed-782d-4ceb-a13f-becb3e54742c/movies/c72ff878-eacc-4251-8673-1f09603a2e64
 Content-Type: application/json
 
 {
@@ -43,4 +69,4 @@ Content-Type: application/json
 }
 
 ### Remove movie
-DELETE http://localhost:9080/MovieTradingPlatform/api/directors/1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4e5b6b/movies/385503c5-3266-4d2d-b107-4d569de4ef9e
+DELETE http://localhost:9080/MovieTradingPlatform/api/directors/4c54ab20-b701-4dc8-b7d2-f99f8c0a9d45/movies/905807bf-1a5f-40db-b557-03be5c2e7c98

@@ -1,4 +1,4 @@
-package com.app.movietradingplatform.entity.director.view;
+package com.app.movietradingplatform.entity.director.jsf.view;
 
 import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
@@ -17,7 +17,7 @@ public class DirectorListView implements Serializable {
     private DirectorService directorService;
 
     public List<Director> getDirectors() {
-        return directorService.getAll();
+        return directorService.findAll();
     }
 
     public String deleteDirector(UUID id) {

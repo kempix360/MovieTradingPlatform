@@ -1,7 +1,8 @@
-package com.app.movietradingplatform.entity.director.view;
+package com.app.movietradingplatform.entity.director.jsf.view;
 
 import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
+import com.app.movietradingplatform.entity.movie.service.MovieService;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -11,6 +12,7 @@ import lombok.Setter;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.UUID;
 
 @Getter
@@ -20,18 +22,23 @@ import java.util.UUID;
 public class DirectorDetailsView implements Serializable {
     @Inject
     private DirectorService directorService;
+    @Inject
+    private MovieService movieService;
 
     private UUID id;
     private Director director;
 
+//    @PostConstruct
     public void loadDirector() {
         if (id != null) {
-            director = directorService.getById(id);
+            Optional<Director> d = directorService.find(id);
+            director = d.orElse(null);
         }
     }
 
     public String deleteMovie(UUID movieId) {
-        directorService.deleteMovie(id, movieId);
+        if (movieId == null) return null;
+        movieService.deleteMovieForDirector(id, movieId);
         return "director_details?faces-redirect=true&amp;id=" + id;
     }
 
@@ -40,7 +47,7 @@ public class DirectorDetailsView implements Serializable {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/view/director/director_list.xhtml");
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("IOException in redirectIfDirectorIsNull: " + e.getMessage());
             }
         }
     }

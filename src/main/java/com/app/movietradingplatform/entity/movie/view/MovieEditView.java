@@ -14,10 +14,7 @@ import lombok.Setter;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -26,8 +23,9 @@ import java.util.UUID;
 public class MovieEditView implements Serializable {
     private UUID directorId;
     private UUID movieId;
-    private Movie movie;
     private Director director;
+    private Movie movie;
+
     private final List<Genre> availableGenres = new ArrayList<>(Arrays.asList(Genre.values()));
 
     @Inject
@@ -38,13 +36,12 @@ public class MovieEditView implements Serializable {
 
     public void loadMovie() {
         if (directorId != null) {
-            director = directorService.getById(directorId);
-            if (director != null && movieId != null) {
-                movie = director.getMovies().stream()
-                        .filter(m -> m.getId().equals(movieId))
-                        .findFirst()
-                        .orElse(null);
-            }
+            Optional<Director> d = directorService.find(directorId);
+            director = d.orElse(null);
+        }
+        if (movieId != null) {
+            Optional<Movie> m = movieService.findMovieByDirector(directorId, movieId);
+            movie = m.orElse(null);
         }
     }
 
@@ -55,7 +52,7 @@ public class MovieEditView implements Serializable {
         director.getMovies().removeIf(m -> m.getId().equals(movie.getId()));
         director.getMovies().add(movie);
 
-        directorService.update(directorId, director);
+        movieService.updateMovieForDirector(directorId, movieId, movie);
         return "/view/director/director_details.xhtml?faces-redirect=true&id=" + director.getId();
     }
 
@@ -64,7 +61,7 @@ public class MovieEditView implements Serializable {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/view/director/director_list.xhtml");
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -74,7 +71,7 @@ public class MovieEditView implements Serializable {
             try {
                 FacesContext.getCurrentInstance().getExternalContext().redirect("/view/director/director_list.xhtml");
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }

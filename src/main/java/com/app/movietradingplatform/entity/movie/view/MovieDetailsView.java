@@ -4,6 +4,7 @@ import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
 import com.app.movietradingplatform.entity.movie.Movie;
 import com.app.movietradingplatform.entity.movie.service.MovieService;
+import jakarta.annotation.PostConstruct;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -13,6 +14,7 @@ import lombok.Setter;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.UUID;
 
 @Getter
@@ -20,10 +22,9 @@ import java.util.UUID;
 @Named
 @ViewScoped
 public class MovieDetailsView implements Serializable {
+    private UUID id;
     private UUID directorId;
-    private UUID movieId;
     private Movie movie;
-    private Director director;
 
     @Inject
     private MovieService movieService;
@@ -32,34 +33,18 @@ public class MovieDetailsView implements Serializable {
     private DirectorService directorService;
 
     public void loadMovie() {
-        if (directorId != null) {
-            director = directorService.getById(directorId);
-            if (director != null && movieId != null) {
-                movie = director.getMovies().stream()
-                        .filter(m -> m.getId().equals(movieId))
-                        .findFirst()
-                        .orElse(null);
-            }
-        }
-    }
-
-    public void redirectIfDirectorIsNull() {
-        if (directorId == null || director == null) {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/view/director/director_list.xhtml");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (id != null) {
+            Optional<Movie> m = movieService.findMovieByDirector(directorId, id);
+            movie = m.orElse(null);
         }
     }
 
     public void redirectIfMovieIsNull() {
-        if (movieId == null || movie == null) {
+        if (id == null || movie == null) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext()
-                        .redirect("/view/director/director_details.xhtml?faces-redirect=true&id=" + directorId);
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/view/director/director_list.xhtml");
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
         }
     }

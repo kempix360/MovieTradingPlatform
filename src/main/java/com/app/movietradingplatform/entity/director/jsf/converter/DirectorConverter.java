@@ -1,4 +1,4 @@
-package com.app.movietradingplatform.entity.director.jsf;
+package com.app.movietradingplatform.entity.director.jsf.converter;
 
 import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
@@ -21,7 +21,7 @@ public class DirectorConverter implements Converter<Director> {
         if (s == null || s.isEmpty()) return null;
         try {
             UUID id = UUID.fromString(s);
-            return directorService.getById(id);
+            return directorService.find(id).orElse(null);
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -29,8 +29,7 @@ public class DirectorConverter implements Converter<Director> {
 
     @Override
     public String getAsString(FacesContext facesContext, UIComponent uiComponent, Director director) {
-        if (director == null) return "";
-        return director.getId() == null ? "" : director.getId().toString();
+        if (director == null || director.getId() == null) return "";
+        return director.getId().toString();
     }
-
 }
