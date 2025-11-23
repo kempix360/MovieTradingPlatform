@@ -3,210 +3,214 @@ package com.app.movietradingplatform.config.db;
 import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
 import com.app.movietradingplatform.entity.enums.Genre;
-import com.app.movietradingplatform.entity.movie.dto.MovieRequest;
+import com.app.movietradingplatform.entity.movie.Movie;
 import com.app.movietradingplatform.entity.movie.service.MovieService;
 import com.app.movietradingplatform.entity.user.User;
+import com.app.movietradingplatform.entity.user.UserRoles;
 import com.app.movietradingplatform.entity.user.service.UserService;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.event.Observes;
-import jakarta.enterprise.context.control.RequestContextController;
-import jakarta.enterprise.context.Initialized;
-import jakarta.inject.Inject;
-import jakarta.servlet.ServletContext;
-import jakarta.transaction.Transactional;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.RunAs;
+import jakarta.ejb.*;
+import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.java.Log;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-@ApplicationScoped
+/**
+ * EJB singleton can be forced to start automatically when application starts. Injects proxy to the services and fills
+ * database with default content. When using persistence storage application instance should be initialized only during
+ * first run in order to init database with starting data. Good place to create first default admin user.
+ */
+@Singleton
+@Startup
+@TransactionAttribute(value = TransactionAttributeType.REQUIRED)
+@NoArgsConstructor
+@DependsOn("AdminServiceInitializer")
+@DeclareRoles({UserRoles.ADMIN, UserRoles.USER})
+@RunAs(UserRoles.ADMIN)
+@Log
 public class DataInitializer {
-    private final UserService userService;
-    private final DirectorService directorService;
-    private final MovieService movieService;
-    private final RequestContextController requestContextController;
-    private final ServletContext servletContext;
-    private final Path avatarDirPath;
+    private UserService userService;
+    private DirectorService directorService;
+    private MovieService movieService;
 
-    @Inject
-    public DataInitializer(UserService userService,
-                           DirectorService directorService,
-                           MovieService movieService,
-                           RequestContextController requestContextController,
-                           ServletContext servletContext) {
-        this.userService = userService;
-        this.directorService = directorService;
-        this.movieService = movieService;
-        this.requestContextController = requestContextController;
-        this.servletContext = servletContext;
-        this.avatarDirPath = getAvatarDirPath();
+    @EJB
+    public void setUserService(UserService service) {
+        this.userService = service;
+    }
+    @EJB
+    public void setDirectorService(DirectorService service) {
+        this.directorService = service;
+    }
+    @EJB
+    public void setMovieService(MovieService service) {
+        this.movieService = service;
     }
 
-    public void onStart(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        boolean activated = requestContextController.activate();
-        System.out.println("[INFO] context activated: " + activated);
-        try {
-            initData();
-        } finally {
-            if (activated) requestContextController.deactivate();
-        }
-    }
-
-    @Transactional
-    public void initData() {
-        initUsers();
-        initDirectors();
-        initMovies();
-
-        System.out.println("[INFO] Data initialized");
-    }
-
-    private void initUsers() {
-        User user1 = User.builder()
-                .id(UUID.fromString("00000000-0000-0000-0000-000000000001"))
+    @PostConstruct
+    @SneakyThrows
+    private void init() {
+        User michaelBJordan = User.builder()
+                .id(UUID.fromString("631aff3b-a99d-4a64-a397-f71eba999077"))
                 .username("Michael B. Jordan")
+                .password("michaelbjordan")
                 .registrationDate(LocalDate.now())
-//                .avatar(readAvatar("michael-b-jordan.png"))
+                .roles(List.of(UserRoles.USER))
                 .build();
-        User user2 = User.builder()
-                .id(UUID.fromString("00000000-0000-0000-0000-000000000002"))
+        User jeremyStrong = User.builder()
+                .id(UUID.fromString("416842e3-84d4-404d-ad22-810ba3bcaa3e"))
                 .username("Jeremy Strong")
+                .password("jeremystrong")
                 .registrationDate(LocalDate.now())
-//                .avatar(readAvatar("jeremy-strong.png"))
+                .roles(List.of(UserRoles.USER))
                 .build();
-        User user3 = User.builder()
-                .id(UUID.fromString("00000000-0000-0000-0000-000000000003"))
+        User mikeyMadison = User.builder()
+                .id(UUID.fromString("fb3b5e04-0573-47bf-96d6-ca6ab430e17a"))
                 .username("Mikey Madison")
+                .password("mikeymadison")
                 .registrationDate(LocalDate.now())
-//                .avatar(readAvatar("mikey-madison.png"))
+                .roles(List.of(UserRoles.USER))
                 .build();
-        User user4 = User.builder()
-                .id(UUID.fromString("00000000-0000-0000-0000-000000000004"))
+        User ayoEdebiri = User.builder()
+                .id(UUID.fromString("4722bebe-1277-4ce0-8500-09398f8d8782"))
                 .username("Ayo Edebiri")
+                .password("ayoedebiri")
                 .registrationDate(LocalDate.now())
-//                .avatar(readAvatar("ayo-edebiri.png"))
+                .roles(List.of(UserRoles.USER))
                 .build();
-        userService.create(user1);
-        userService.create(user2);
-        userService.create(user3);
-        userService.create(user4);
-        saveAvatarFile(user1);
-        saveAvatarFile(user2);
-        saveAvatarFile(user3);
-        saveAvatarFile(user4);
-    }
+        userService.update(michaelBJordan);
+        userService.update(jeremyStrong);
+        userService.update(mikeyMadison);
+        userService.update(ayoEdebiri);
 
-    private void initDirectors() {
-        directorService.create(Director.builder()
-                .id(UUID.fromString("10000000-0000-0000-0000-000000000001"))
+        Director seanBaker = Director.builder()
+                .id(UUID.fromString("3427682e-aebc-4589-8061-52e124082ce2"))
                 .name("Sean Baker")
                 .description("Known for his independent films with a focus on marginalized communities.")
-                .build());
-
-        directorService.create(Director.builder()
-                .id(UUID.fromString("10000000-0000-0000-0000-000000000002"))
+                .build();
+        Director robertEggers = Director.builder()
+                .id(UUID.fromString("a39e9326-f992-4df0-b9a0-381d7116ed80"))
                 .name("Robert Eggers")
                 .description("Acclaimed filmmaker and actress known for her work in coming-of-age films.")
-                .build());
-
-        directorService.create(Director.builder()
-                .id(UUID.fromString("10000000-0000-0000-0000-000000000003"))
+                .build();
+        Director denisVilleneuve = Director.builder()
+                .id(UUID.fromString("373338b9-eaf5-4448-908c-77a5f50a49a2"))
                 .name("Denis Villeneuve")
                 .description("Renowned for his visually stunning and thought-provoking films.")
-                .build());
-    }
+                .build();
+        directorService.update(seanBaker);
+        directorService.update(robertEggers);
+        directorService.update(denisVilleneuve);
 
-    private void initMovies() {
-        Optional<Director> seanBaker = directorService.find(UUID.fromString("10000000-0000-0000-0000-000000000001"));
-        Optional<Director> robertEggers = directorService.find(UUID.fromString("10000000-0000-0000-0000-000000000002"));
-        Optional<Director> denisVilleneuve = directorService.find(UUID.fromString("10000000-0000-0000-0000-000000000003"));
-
-        Optional<User> user1 = userService.find(UUID.fromString("00000000-0000-0000-0000-000000000001"));
-        Optional<User> user2 = userService.find(UUID.fromString("00000000-0000-0000-0000-000000000002"));
-
-        user1.ifPresent(user -> {
-            seanBaker.ifPresent(director -> {
-                movieService.createWithLinks(new MovieRequest(
-                                "The Florida Project",
-                                LocalDate.of(2017, 10, 6),
-                                List.of(Genre.DRAMA),
-                                director.getId(),
-                                user.getId())
-                );
-                movieService.createWithLinks(new MovieRequest(
-                                "Tangerine",
-                                LocalDate.of(2015, 7, 10),
-                                List.of(Genre.COMEDY, Genre.DRAMA),
-                                director.getId(),
-                                user.getId())
-                );
-            });
-
-            robertEggers.ifPresent(director -> {
-                movieService.createWithLinks(new MovieRequest(
-                                "The Witch",
-                                LocalDate.of(2015, 1, 23),
-                                List.of(Genre.HORROR, Genre.DRAMA),
-                                director.getId(),
-                                user.getId())
-                );
-                movieService.createWithLinks(new MovieRequest(
-                                "The Lighthouse",
-                                LocalDate.of(2019, 5, 19),
-                                List.of(Genre.HORROR, Genre.DRAMA),
-                                director.getId(),
-                                user.getId())
-                );
-            });
-        });
-
-        user2.ifPresent(user -> {
-            denisVilleneuve.ifPresent(director -> {
-                movieService.createWithLinks(new MovieRequest(
-                                "Arrival",
-                                LocalDate.of(2016, 9, 1),
-                                List.of(Genre.SCI_FI, Genre.DRAMA),
-                                director.getId(),
-                                user.getId())
-                );
-            });
-        });
-    }
-
-    private Path getAvatarDirPath() {
-        String avatarParam = servletContext.getInitParameter("avatarDir");
-        String base = servletContext.getRealPath("/");
-        if (base == null) base = System.getProperty("java.io.tmpdir");
-        return Path.of(base, avatarParam);
-    }
-
-    private byte[] readAvatar(String fileName) {
-        try {
-            Path avatarPath = avatarDirPath.resolve(fileName);
-            if (Files.exists(avatarPath)) {
-                return Files.readAllBytes(avatarPath);
-            } else {
-                System.err.println("Avatar file not found: " + avatarPath);
-                return null;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading avatar " + fileName, e);
-        }
-    }
-
-    private void saveAvatarFile(User user) {
-        if (user == null || user.getAvatar() == null) return;
-        try {
-            if (!java.nio.file.Files.exists(avatarDirPath)) {
-                java.nio.file.Files.createDirectories(avatarDirPath);
-            }
-            java.nio.file.Files.write(avatarDirPath.resolve(user.getId().toString() + ".png"), user.getAvatar());
-        } catch (IOException e) {
-            System.err.println("[WARN] Failed to persist avatar file for user " + user.getId() + ": " + e.getMessage());
-        }
+        Movie theFloridaProject = Movie.builder()
+                .id(UUID.fromString("243526c0-de68-4334-85a4-37656a046e90"))
+                .title("The Florida Project")
+                .releaseDate(LocalDate.of(2017, 10, 6))
+                .genres(List.of(Genre.DRAMA))
+                .director(seanBaker)
+                .user(michaelBJordan)
+                .build();
+        Movie tangerine = Movie.builder()
+                .id(UUID.fromString("6c2b18b1-7818-4efc-a815-18bb7fc0aa52"))
+                .title("Tangerine")
+                .releaseDate(LocalDate.of(2015, 7, 10))
+                .genres(List.of(Genre.COMEDY, Genre.DRAMA))
+                .director(seanBaker)
+                .user(michaelBJordan)
+                .build();
+        Movie theWitch = Movie.builder()
+                .id(UUID.fromString("7a8ca089-76ef-437a-9218-e220dc89c0f5"))
+                .title("The VVitch")
+                .releaseDate(LocalDate.of(2015, 1, 23))
+                .genres(List.of(Genre.HORROR, Genre.DRAMA))
+                .director(robertEggers)
+                .user(jeremyStrong)
+                .build();
+        Movie theLighthouse = Movie.builder()
+                .id(UUID.fromString("7298ac20-daf6-4910-9bb6-561ee9f4d26f"))
+                .title("The Lighthouse")
+                .releaseDate(LocalDate.of(2019, 5, 19))
+                .genres(List.of(Genre.HORROR, Genre.DRAMA))
+                .director(robertEggers)
+                .user(jeremyStrong)
+                .build();
+        Movie arrival = Movie.builder()
+                .id(UUID.fromString("276e17fc-a7e2-4998-a58c-f4ff1a23206b"))
+                .title("Arrival")
+                .releaseDate(LocalDate.of(2016, 9, 1))
+                .genres(List.of(Genre.SCI_FI, Genre.DRAMA))
+                .director(denisVilleneuve)
+                .user(mikeyMadison)
+                .build();
+        movieService.update(theFloridaProject);
+                // link movie in Director and User objects so bidirectional relations are persisted
+                if (theFloridaProject.getDirector() != null) {
+                        Director d = theFloridaProject.getDirector();
+                        if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
+                        d.getMovies().add(theFloridaProject);
+                        directorService.update(d);
+                }
+                if (theFloridaProject.getUser() != null) {
+                        User u = theFloridaProject.getUser();
+                        if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
+                        u.getOwnedMovies().add(theFloridaProject);
+                        userService.update(u);
+                }
+        movieService.update(tangerine);
+                if (tangerine.getDirector() != null) {
+                        Director d = tangerine.getDirector();
+                        if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
+                        d.getMovies().add(tangerine);
+                        directorService.update(d);
+                }
+                if (tangerine.getUser() != null) {
+                        User u = tangerine.getUser();
+                        if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
+                        u.getOwnedMovies().add(tangerine);
+                        userService.update(u);
+                }
+        movieService.update(theWitch);
+                if (theWitch.getDirector() != null) {
+                        Director d = theWitch.getDirector();
+                        if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
+                        d.getMovies().add(theWitch);
+                        directorService.update(d);
+                }
+                if (theWitch.getUser() != null) {
+                        User u = theWitch.getUser();
+                        if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
+                        u.getOwnedMovies().add(theWitch);
+                        userService.update(u);
+                }
+        movieService.update(theLighthouse);
+                if (theLighthouse.getDirector() != null) {
+                        Director d = theLighthouse.getDirector();
+                        if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
+                        d.getMovies().add(theLighthouse);
+                        directorService.update(d);
+                }
+                if (theLighthouse.getUser() != null) {
+                        User u = theLighthouse.getUser();
+                        if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
+                        u.getOwnedMovies().add(theLighthouse);
+                        userService.update(u);
+                }
+        movieService.update(arrival);
+                if (arrival.getDirector() != null) {
+                        Director d = arrival.getDirector();
+                        if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
+                        d.getMovies().add(arrival);
+                        directorService.update(d);
+                }
+                if (arrival.getUser() != null) {
+                        User u = arrival.getUser();
+                        if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
+                        u.getOwnedMovies().add(arrival);
+                        userService.update(u);
+                }
     }
 }

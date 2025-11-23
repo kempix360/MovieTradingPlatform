@@ -1,7 +1,9 @@
-package com.app.movietradingplatform.entity.user.view;
+package com.app.movietradingplatform.entity.user.jsf.view;
 
+import com.app.movietradingplatform.entity.movie.service.MovieService;
 import com.app.movietradingplatform.entity.user.User;
 import com.app.movietradingplatform.entity.user.service.UserService;
+import jakarta.ejb.EJB;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -13,8 +15,12 @@ import java.util.UUID;
 @Named
 @ViewScoped
 public class UserListView implements Serializable {
-    @Inject
     private UserService userService;
+
+    @EJB
+    public void setUserService(UserService service) {
+        this.userService = service;
+    }
 
     public List<User> getUsers() {
         return userService.findAll();

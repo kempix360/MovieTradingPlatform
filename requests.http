@@ -1,11 +1,42 @@
+### Get all users
+# @no-cookie-jar
+GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+
+### Get user
+# @no-cookie-jar
+GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users/631aff3b-a99d-4a64-a397-f71eba999077
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+
+### Get all movies for a user
+# @no-cookie-jar
+GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users/631aff3b-a99d-4a64-a397-f71eba999077/movies
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+
+### Get all movies
+# @no-cookie-jar
+GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/movies
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+
 ### Get all directors
-GET http://localhost:9080/MovieTradingPlatform/api/directors
+# @no-cookie-jar
+GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
 
 ### Get director
-GET http://localhost:9080/MovieTradingPlatform/api/directors/4c54ab20-b701-4dc8-b7d2-f99f8c0a9d45
+# @no-cookie-jar
+GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/3427682e-aebc-4589-8061-52e124082ce2
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+
+### Get all movies for a director
+# @no-cookie-jar
+GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/a39e9326-f992-4df0-b9a0-381d7116ed80/movies
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
 
 ### Create new director
-POST http://localhost:9080/MovieTradingPlatform/api/directors
+# @no-cookie-jar
+POST http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
 Content-Type: application/json
 
 {
@@ -13,26 +44,9 @@ Content-Type: application/json
   "description": "Crazy basterd"
 }
 
-### Create new director
-POST http://localhost:9080/MovieTradingPlatform/api/directors
-Content-Type: application/json
-
-{
-  "name": "Dennis Villeneuve",
-  "description": "Sci-fi master"
-}
-
-### Create new director
-POST http://localhost:9080/MovieTradingPlatform/api/directors
-Content-Type: application/json
-
-{
-  "name": "Sean Baker",
-  "description": "Indie king!"
-}
-
 ### Update director
-PUT http://localhost:9080/MovieTradingPlatform/api/directors/4ec5f341-d0fa-4e51-bf01-a6e773ca814e
+PUT http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/5afc3e4c-aa6f-4483-bdea-220a41bc4114
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
 Content-Type: application/json
 
 {
@@ -40,17 +54,20 @@ Content-Type: application/json
 }
 
 ### Delete director
-DELETE http://localhost:9080/MovieTradingPlatform/api/directors/4ec5f341-d0fa-4e51-bf01-a6e773ca814e
-
+DELETE http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/5afc3e4c-aa6f-4483-bdea-220a41bc4114
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
 
 ### Get all movies for a director
-GET http://localhost:9080/MovieTradingPlatform/api/directors/afeb89ed-782d-4ceb-a13f-becb3e54742c/movies
+GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/3427682e-aebc-4589-8061-52e124082ce2/movies
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
 
 ### Get specific movie for a director
-GET http://localhost:9080/MovieTradingPlatform/api/directors/afeb89ed-782d-4ceb-a13f-becb3e54742c/movies/905807bf-1a5f-40db-b557-03be5c2e7c98
+GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/3427682e-aebc-4589-8061-52e124082ce2/movies/905807bf-1a5f-40db-b557-03be5c2e7c98
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
 
 ### Add movie to director
-POST http://localhost:9080/MovieTradingPlatform/api/directors/afeb89ed-782d-4ceb-a13f-becb3e54742c/movies
+POST http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/3427682e-aebc-4589-8061-52e124082ce2/movies
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
 Content-Type: application/json
 
 {
@@ -60,7 +77,8 @@ Content-Type: application/json
 }
 
 ### Update movie
-PUT http://localhost:9080/MovieTradingPlatform/api/directors/afeb89ed-782d-4ceb-a13f-becb3e54742c/movies/c72ff878-eacc-4251-8673-1f09603a2e64
+PUT http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/3427682e-aebc-4589-8061-52e124082ce2/movies/c72ff878-eacc-4251-8673-1f09603a2e64
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
 Content-Type: application/json
 
 {
@@ -69,4 +87,5 @@ Content-Type: application/json
 }
 
 ### Remove movie
-DELETE http://localhost:9080/MovieTradingPlatform/api/directors/4c54ab20-b701-4dc8-b7d2-f99f8c0a9d45/movies/905807bf-1a5f-40db-b557-03be5c2e7c98
+DELETE http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/3427682e-aebc-4589-8061-52e124082ce2/movies/905807bf-1a5f-40db-b557-
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin

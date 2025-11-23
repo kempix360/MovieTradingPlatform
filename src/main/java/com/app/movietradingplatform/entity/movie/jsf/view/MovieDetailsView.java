@@ -1,10 +1,9 @@
-package com.app.movietradingplatform.entity.movie.view;
+package com.app.movietradingplatform.entity.movie.jsf.view;
 
-import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
 import com.app.movietradingplatform.entity.movie.Movie;
 import com.app.movietradingplatform.entity.movie.service.MovieService;
-import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -26,11 +25,17 @@ public class MovieDetailsView implements Serializable {
     private UUID directorId;
     private Movie movie;
 
-    @Inject
+    private DirectorService directorService;
     private MovieService movieService;
 
-    @Inject
-    private DirectorService directorService;
+    @EJB
+    public void setDirectorService(DirectorService service) {
+        this.directorService = service;
+    }
+    @EJB
+    public void setMovieService(MovieService service) {
+        this.movieService = service;
+    }
 
     public void loadMovie() {
         if (id != null) {

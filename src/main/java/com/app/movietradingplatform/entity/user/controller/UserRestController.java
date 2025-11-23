@@ -1,10 +1,13 @@
 package com.app.movietradingplatform.entity.user.controller;
 
 import com.app.movietradingplatform.entity.user.User;
+import com.app.movietradingplatform.entity.user.UserRoles;
 import com.app.movietradingplatform.entity.user.dto.UserRequest;
 import com.app.movietradingplatform.entity.user.dto.UserResponse;
 import com.app.movietradingplatform.entity.user.service.UserService;
-import jakarta.inject.Inject;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import java.net.URI;
@@ -17,8 +20,11 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserRestController {
 
-    @Inject
     UserService userService;
+    @EJB
+    public void setService(UserService service) {
+        this.userService = service;
+    }
 
     private UserResponse toResponse(User user) {
         return UserResponse.builder()
@@ -29,6 +35,7 @@ public class UserRestController {
     }
 
     @GET
+    @RolesAllowed(UserRoles.ADMIN)
     public Response list() {
         List<UserResponse> response = userService.findAll()
                 .stream()
@@ -37,7 +44,20 @@ public class UserRestController {
         return Response.ok(response).build();
     }
 
+    @GET
+    @Path("{userId}")
+    @RolesAllowed(UserRoles.ADMIN)
+    public Response get(@PathParam("userId") String id) {
+        Optional<User> user = userService.find(UUID.fromString(id));
+        if (user.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(Map.of("error", "User not found")).build();
+        }
+        return Response.ok(toResponse(user.get())).build();
+    }
+
     @POST
+    @PermitAll
     public Response create(UserRequest request, @Context UriInfo uriInfo) {
         User user = new User();
         user.setUsername(request.getUsername());
@@ -48,23 +68,13 @@ public class UserRestController {
         return Response.created(uri).entity(toResponse(created)).build();
     }
 
-    @GET
-    @Path("{id}")
-    public Response get(@PathParam("id") String id) {
-        Optional<User> user = userService.find(UUID.fromString(id));
-        if (user.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity(Map.of("error", "User not found")).build();
-        }
-        return Response.ok(toResponse(user.get())).build();
-    }
-
     @PUT
-    @Path("{id}")
-    public Response update(@PathParam("id") String id, UserRequest request) {
+    @Path("{userId}")
+    @RolesAllowed(UserRoles.ADMIN)
+    public Response update(@PathParam("userId") String userId, UserRequest request) {
         try {
             User user = new User();
-            user.setId(UUID.fromString(id));
+            user.setId(UUID.fromString(userId));
             user.setUsername(request.getUsername());
 
             User updated = userService.update(user);
@@ -76,10 +86,11 @@ public class UserRestController {
     }
 
     @DELETE
-    @Path("{id}")
-    public Response delete(@PathParam("id") String id) {
+    @Path("{userId}")
+    @RolesAllowed(UserRoles.ADMIN)
+    public Response delete(@PathParam("userId") String userId) {
         try {
-            userService.delete(UUID.fromString(id));
+            userService.delete(UUID.fromString(userId));
             return Response.noContent().build();
         } catch (NoSuchElementException e) {
             return Response.status(Response.Status.NOT_FOUND)
@@ -88,6 +99,7 @@ public class UserRestController {
     }
 
     @DELETE
+    @RolesAllowed(UserRoles.ADMIN)
     public Response deleteAll() {
         List<User> all = userService.findAll();
         if (all.isEmpty()) {

@@ -2,14 +2,17 @@ package com.app.movietradingplatform.entity.director.service;
 
 import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.repository.DirectorRepository;
-import jakarta.enterprise.context.ApplicationScoped;
+import com.app.movietradingplatform.entity.user.UserRoles;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 
 import java.util.*;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor()
 public class DirectorService {
     private DirectorRepository directorRepository;
@@ -19,6 +22,7 @@ public class DirectorService {
         this.directorRepository = directorRepository;
     }
 
+    @RolesAllowed(UserRoles.USER)
     public List<Director> findAll() {
         return directorRepository.findAll();
     }
@@ -27,24 +31,24 @@ public class DirectorService {
         return directorRepository.find(id);
     }
 
-    @Transactional
+    @RolesAllowed(UserRoles.ADMIN)
     public Director create(Director director) {
         directorRepository.create(director);
         return director;
     }
 
-    @Transactional
+    @RolesAllowed(UserRoles.ADMIN)
     public Director update(Director director) {
         directorRepository.update(director);
         return director;
     }
 
-    @Transactional
+    @RolesAllowed(UserRoles.ADMIN)
     public void delete(UUID id) {
         directorRepository.find(id).ifPresent(directorRepository::delete);
     }
 
-    @Transactional
+    @RolesAllowed(UserRoles.ADMIN)
     public void deleteAll() {
         directorRepository.deleteAll();
     }

@@ -3,6 +3,7 @@ package com.app.movietradingplatform.entity.director.jsf.view;
 import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
 import com.app.movietradingplatform.entity.movie.service.MovieService;
+import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -20,15 +21,21 @@ import java.util.UUID;
 @Named
 @ViewScoped
 public class DirectorDetailsView implements Serializable {
-    @Inject
-    private DirectorService directorService;
-    @Inject
-    private MovieService movieService;
-
     private UUID id;
     private Director director;
 
-//    @PostConstruct
+    private DirectorService directorService;
+    private MovieService movieService;
+
+    @EJB
+    public void setDirectorService(DirectorService service) {
+        this.directorService = service;
+    }
+    @EJB
+    public void setMovieService(MovieService service) {
+        this.movieService = service;
+    }
+
     public void loadDirector() {
         if (id != null) {
             Optional<Director> d = directorService.find(id);

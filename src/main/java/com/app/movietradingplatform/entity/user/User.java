@@ -27,16 +27,25 @@ public class User implements Serializable {
     private UUID id;
 
     private String username;
+    @ToString.Exclude
+    private String password;
     private LocalDate registrationDate;
 
     @Lob
-    @Basic(fetch = FetchType.LAZY)
+    @Basic(fetch = FetchType.EAGER)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private byte[] avatar;
 
-    @ToString.Exclude //It's common to exclude lists from toString
+    @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Movie> ownedMovies = new ArrayList<>();
+
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
+
 }

@@ -1,16 +1,15 @@
 package com.app.movietradingplatform.entity.movie.repository;
 
 import com.app.movietradingplatform.entity.movie.Movie;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@RequestScoped
+@Dependent
 public class MovieRepository {
 
     private EntityManager em;
@@ -28,24 +27,34 @@ public class MovieRepository {
         return em.createQuery("SELECT s FROM Movie s", Movie.class).getResultList();
     }
 
-    @Transactional
-    public void create(Movie song) {
-        if (song == null) return;
-        em.persist(song);
+    public List<Movie> findByDirector(UUID directorId) {
+        if (directorId == null) return List.of();
+        return em.createQuery("SELECT m FROM Movie m WHERE m.director.id = :did", Movie.class)
+                .setParameter("did", directorId)
+                .getResultList();
     }
 
-    @Transactional
-    public void update(Movie song) {
-        em.merge(song);
+    public List<Movie> findByUser(UUID userId) {
+        if (userId == null) return List.of();
+        return em.createQuery("SELECT m FROM Movie m WHERE m.user.id = :uid", Movie.class)
+                .setParameter("uid", userId)
+                .getResultList();
     }
 
-    @Transactional
-    public void delete(Movie song) {
-        Movie managed = em.contains(song) ? song : em.merge(song);
+    public void create(Movie movie) {
+        if (movie == null) return;
+        em.persist(movie);
+    }
+
+    public void update(Movie movie) {
+        em.merge(movie);
+    }
+
+    public void delete(Movie movie) {
+        Movie managed = em.contains(movie) ? movie : em.merge(movie);
         em.remove(managed);
     }
 
-    @Transactional
     public void deleteAll() {
         em.createQuery("DELETE FROM Movie").executeUpdate();
     }

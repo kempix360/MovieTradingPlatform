@@ -34,4 +34,32 @@
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
 
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>directors</web-resource-name>
+            <url-pattern>/directors/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>USER</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>users</web-resource-name>
+            <url-pattern>/users/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMINISTRATOR</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-role>
+        <role-name>ADMINISTRATOR</role-name>
+    </security-role>
+
+    <security-role>
+        <role-name>USER</role-name>
+    </security-role>
+
 </web-app>

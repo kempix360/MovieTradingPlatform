@@ -25,6 +25,12 @@
             <header class="mb-4 mt-4">
                 <h:graphicImage name="images/logo.png" alt="MovieTradingPlatform Logo" class="img-fluid" style="max-height: 150px;"/>
                 <h1>MovieTradingPlatform</h1>
+                <h:form styleClass="container d-flex  align-items-center justify-content-end"
+                        rendered="#{facesContext.externalContext.userPrincipal != null}">
+                    Logged: <h:outputText value="#{facesContext.externalContext.userPrincipal.name}"/>
+                    <h:commandButton styleClass="btn btn-link" value="Logout"
+                                     action="#{userLogout.logoutAction()}"/>
+                </h:form>
             </header>
 
             <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
@@ -34,11 +40,14 @@
                             <h:link styleClass="nav-link" outcome="/index.xhtml">Home</h:link>
                         </li>
                         <li class="nav-item">
-                            <h:link styleClass="nav-link" outcome="/view/user/user_list.xhtml">Users</h:link>
-                        </li>
-                        <li class="nav-item">
                             <h:link styleClass="nav-link" outcome="/view/director/director_list.xhtml">Directors</h:link>
                         </li>
+                        <h:panelGroup rendered="#{facesContext.externalContext.isUserInRole('admin')}">
+                            <li class="nav-item">
+                                <h:link styleClass="nav-link"
+                                        outcome="/user/user_list.xhtml">Users</h:link>
+                            </li>
+                        </h:panelGroup>
                     </ul>
                 </div>
             </nav>

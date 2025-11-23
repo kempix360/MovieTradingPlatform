@@ -2,6 +2,8 @@ package com.app.movietradingplatform.entity.director.jsf.view;
 
 import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
+import com.app.movietradingplatform.entity.movie.service.MovieService;
+import jakarta.ejb.EJB;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -13,8 +15,12 @@ import java.util.UUID;
 @Named
 @ViewScoped
 public class DirectorListView implements Serializable {
-    @Inject
     private DirectorService directorService;
+
+    @EJB
+    public void setDirectorService(DirectorService service) {
+        this.directorService = service;
+    }
 
     public List<Director> getDirectors() {
         return directorService.findAll();

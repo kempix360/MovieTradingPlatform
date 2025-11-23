@@ -1,16 +1,16 @@
 package com.app.movietradingplatform.entity.user.repository;
 
 import com.app.movietradingplatform.entity.user.User;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
-import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@RequestScoped
+@Dependent
 public class UserRepository {
 
     private EntityManager em;
@@ -28,26 +28,30 @@ public class UserRepository {
         return em.createQuery("SELECT u FROM User u", User.class).getResultList();
     }
 
-    @Transactional
+    public Optional<User> findByUsername(String username) {
+        try {
+            return Optional.of(em.createQuery("select u from User u where u.username = :username", User.class)
+                    .setParameter("username", username)
+                    .getSingleResult());
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
+    }
+
     public void create(User user) {
-        if (user == null) return;
         em.persist(user);
     }
 
-    @Transactional
     public void update(User user) {
         em.merge(user);
     }
 
-    @Transactional
     public void delete(User user) {
         User managed = em.contains(user) ? user : em.merge(user);
         em.remove(managed);
     }
 
-    @Transactional
     public void deleteAll() {
         em.createQuery("DELETE FROM User").executeUpdate();
     }
-
 }

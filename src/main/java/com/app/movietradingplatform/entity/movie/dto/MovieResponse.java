@@ -1,6 +1,8 @@
 package com.app.movietradingplatform.entity.movie.dto;
 
 import com.app.movietradingplatform.entity.director.dto.DirectorResponse;
+import com.app.movietradingplatform.entity.movie.Movie;
+import com.app.movietradingplatform.entity.user.dto.UserResponse;
 import lombok.*;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -18,4 +20,5 @@ public class MovieResponse {
     private LocalDate releaseDate;
     private String genres;
     private DirectorResponse director;
+    private UserResponse user;
 }
