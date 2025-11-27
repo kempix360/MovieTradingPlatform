@@ -5,7 +5,6 @@ import com.app.movietradingplatform.entity.user.UserRoles;
 import com.app.movietradingplatform.entity.user.dto.UserRequest;
 import com.app.movietradingplatform.entity.user.dto.UserResponse;
 import com.app.movietradingplatform.entity.user.service.UserService;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
@@ -57,10 +56,11 @@ public class UserRestController {
     }
 
     @POST
-    @PermitAll
     public Response create(UserRequest request, @Context UriInfo uriInfo) {
         User user = new User();
+        user.setId(UUID.randomUUID());
         user.setUsername(request.getUsername());
+        user.setPassword(request.getPassword());
         user.setRegistrationDate(LocalDate.now());
 
         User created = userService.create(user);

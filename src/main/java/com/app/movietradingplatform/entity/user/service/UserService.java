@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Principal;
 import java.util.*;
 
 @LocalBean
@@ -33,33 +34,35 @@ public class UserService {
         this.securityContext = securityContext;
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
+    @PermitAll
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
+    @PermitAll
     public Optional<User> find(UUID id) {
         return userRepository.find(id);
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
+    @PermitAll
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
+    @PermitAll
     public User create(User user) {
         user.setPassword(passwordHash.generate(user.getPassword().toCharArray()));
         userRepository.create(user);
         return user;
     }
 
+    @PermitAll
     public User update(User user) {
         userRepository.update(user);
         return user;
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
+    @PermitAll
     public void delete(UUID id) {
         userRepository.delete(userRepository.find(id).orElseThrow());
     }
@@ -69,41 +72,19 @@ public class UserService {
         userRepository.deleteAll();
     }
 
-    @PermitAll
-    public boolean verify(String username, String password) {
-        return findByUsername(username)
-                .map(user -> passwordHash.verify(password.toCharArray(), user.getPassword()))
-                .orElse(false);
-    }
-
-    public void updateAvatar(UUID id, InputStream is) {
-        userRepository.find(id).ifPresent(user -> {
-            try {
-                user.setAvatar(is.readAllBytes());
-                userRepository.update(user);
-            } catch (IOException ex) {
-                throw new IllegalStateException(ex);
-            }
-        });
-    }
-
-    /**
-     * Updates last login time for current caller principal.
-     */
-//    @PermitAll
-//    public void updateCallerPrincipalLastLoginDateTime() {
-//        findCallerPrincipal().ifPresent(principal -> principal.setLastLoginDateTime(LocalDateTime.now()));
-//    }
-
-    /**
-     * @return logged user entity
-     */
-    public Optional<User> findCallerPrincipal() {
-        if (securityContext.getCallerPrincipal() != null) {
-            return findByUsername(securityContext.getCallerPrincipal().getName());
-        } else {
-            return Optional.empty();
+    public boolean verifyCallerPrincipal(UUID userId) {
+        if (securityContext != null && !securityContext.isCallerInRole(UserRoles.ADMIN)) {
+            Principal principal = securityContext.getCallerPrincipal();
+            if (principal == null)
+                return false;
+//                throw new RuntimeException("Access denied: not owner");
+            Optional<User> userOpt = findByUsername(principal.getName());
+            if (userOpt.isEmpty())
+                return false;
+//                throw new RuntimeException("Access denied: not owner");
+            User caller = userOpt.get();
+            return caller.getId().equals(userId);
         }
+        return true;
     }
-
 }

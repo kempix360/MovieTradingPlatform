@@ -34,7 +34,7 @@ public class DirectorRestController {
     }
 
     @GET
-    @PermitAll
+    @RolesAllowed(UserRoles.USER)
     public Response listAllDirectors() {
         List<DirectorResponse> response = directorService.findAll()
                 .stream()
@@ -45,6 +45,7 @@ public class DirectorRestController {
 
     @GET
     @Path("{directorId}")
+    @PermitAll
     public Response get(@PathParam("directorId") String directorId) {
         Optional<Director> director = directorService.find(UUID.fromString(directorId));
         if (director.isEmpty()) {

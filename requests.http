@@ -1,37 +1,101 @@
+#Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
+
 ### Get all users
 # @no-cookie-jar
 GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users
-Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
 
 ### Get user
 # @no-cookie-jar
 GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users/631aff3b-a99d-4a64-a397-f71eba999077
-Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
 
 ### Get all movies for a user
 # @no-cookie-jar
 GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users/631aff3b-a99d-4a64-a397-f71eba999077/movies
-Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+#Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
+
+### Get specific movie for a user
+# @no-cookie-jar
+GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users/631aff3b-a99d-4a64-a397-f71eba999077/movies/243526c0-de68-4334-85a4-37656a046e90
+#Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
 
 ### Get all movies
 # @no-cookie-jar
 GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/movies
-Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
+
+### Create new movie for user
+# @no-cookie-jar
+POST http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users/631aff3b-a99d-4a64-a397-f71eba999077/movies
+Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+Content-Type: application/json
+
+{
+  "title": "Anora",
+  "releaseDate": "2024-11-01",
+  "genres": ["DRAMA"]
+}
+
+### Update movie for user
+# @no-cookie-jar
+PUT http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users/631aff3b-a99d-4a64-a397-f71eba999077/movies/c51617dc-6a47-45e1-9cf4-512a64413e87
+Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+Content-Type: application/json
+
+{
+  "title": "Anora 2",
+  "releaseDate": "1999-01-01",
+  "genres": ["COMEDY", "ACTION"]
+}
+
+### Delete movie for user
+# @no-cookie-jar
+DELETE http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users/631aff3b-a99d-4a64-a397-f71eba999077/movies/c51617dc-6a47-45e1-9cf4-512a64413e87
+Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
 
 ### Get all directors
 # @no-cookie-jar
 GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors
-Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
 
 ### Get director
 # @no-cookie-jar
 GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/3427682e-aebc-4589-8061-52e124082ce2
-Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+#Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
 
 ### Get all movies for a director
 # @no-cookie-jar
 GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/a39e9326-f992-4df0-b9a0-381d7116ed80/movies
-Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+#Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
+
+### Create new user
+# @no-cookie-jar
+POST http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users
+Content-Type: application/json
+
+{
+  "username": "createuser",
+  "password": "createuserpassword"
+}
 
 ### Create new director
 # @no-cookie-jar
@@ -55,15 +119,21 @@ Content-Type: application/json
 
 ### Delete director
 DELETE http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/5afc3e4c-aa6f-4483-bdea-220a41bc4114
-Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+#Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
 
 ### Get all movies for a director
 GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/3427682e-aebc-4589-8061-52e124082ce2/movies
-Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+#Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
 
 ### Get specific movie for a director
 GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/3427682e-aebc-4589-8061-52e124082ce2/movies/905807bf-1a5f-40db-b557-03be5c2e7c98
-Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+#Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
 
 ### Add movie to director
 POST http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/3427682e-aebc-4589-8061-52e124082ce2/movies
@@ -88,4 +158,6 @@ Content-Type: application/json
 
 ### Remove movie
 DELETE http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/directors/3427682e-aebc-4589-8061-52e124082ce2/movies/905807bf-1a5f-40db-b557-
-Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu     # admin-service:adminadmin
+#Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
