@@ -14,7 +14,7 @@ import java.util.UUID;
 public class DirectorConverter implements Converter<Director> {
 
     @Inject
-    private DirectorService directorService;
+    DirectorService directorService;
 
     @Override
     public Director getAsObject(FacesContext facesContext, UIComponent uiComponent, String s) {

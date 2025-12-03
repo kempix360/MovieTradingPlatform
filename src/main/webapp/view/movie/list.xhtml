@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/template/main.xhtml">
+
+    <ui:define name="content">
+        <f:event type="preRenderView" listener="#{authView.checkAuth}" />
+        <h2>#{messages['songs.title']}</h2>
+        <h:form>
+            <h:dataTable value="#{songList.songs}" var="song">
+                <h:column>
+                    <f:facet name="header">#{messages['song.field.title']}</f:facet>
+                    #{song.title}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{messages['song.field.artist']}</f:facet>
+                    <h:panelGroup>
+                        <h:link rendered="#{not empty song.artist}" outcome="/artists/view.xhtml">
+                            <f:param name="id" value="#{song.artist.id}" />
+                            #{song.artist.name}
+                        </h:link>
+                        <h:outputText rendered="#{empty song.artist}" value="-" />
+                    </h:panelGroup>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">#{messages['table.actions']}</f:facet>
+                    <h:link outcome="/songs/view.xhtml">
+                        <f:param name="id" value="#{song.id}" />
+                        #{messages['actions.view']}
+                    </h:link>
+                    &#160;
+                    <h:commandButton value="#{messages['actions.delete']}" action="#{songList.delete(song.id)}" rendered="#{authView.isAdmin() or authView.isOwner(song.user.id)}" />
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{directorView.id}" />
+        <f:viewAction action="#{directorView.init}" />
+    </f:metadata>
+
+    <ui:define name="content">
+        <f:event type="preRenderView" listener="#{authView.checkAuth}" />
+        <h2>#{messages['artists.view.title']}</h2>
+
+        <h:outputText value="#{messages['notfound']}" rendered="#{directorView.notFound}" />
+
+        <h:panelGroup rendered="#{not directorView.notFound}">
+            <h:panelGrid columns="2">
+                <h:outputText value="#{messages['artist.field.name']}" />
+                <h:outputText value="#{directorView.director.name}" />
+                <h:outputText value="#{messages['artist.field.country']}" />
+                <h:outputText value="#{directorView.director.country}" />
+                <h:outputText value="#{messages['artist.field.debut']}" />
+                <h:outputText value="#{directorView.director.debutYear}" />
+            </h:panelGrid>
+
+            <h:form>
+                <h:commandButton value="#{messages['artist.delete']}" action="#{directorView.deleteArtist(directorView.id)}" rendered="#{authView.isAdmin()}"/>
+            </h:form>
+            <h:link outcome="/artists/form.xhtml" rendered="#{authView.isAdmin()}">
+                <f:param name="id" value="#{directorView.id}" />
+                #{messages['artist.edit']}
+            </h:link>
+            <h:form>
+                <h:link outcome="/songs/form.xhtml" value="#{messages['song.add']}" rendered="#{not empty request.userPrincipal}">
+                    <f:param name="artistId" value="#{directorView.id}" />
+                </h:link>
+            </h:form>
+
+            <h3>#{messages['artist.songs.header']}</h3>
+            <h:form id="songsForm">
+                <h:inputHidden id="artistId" value="#{directorView.id}" />
+                <h:dataTable id="songsTable" value="#{directorView.songs}" var="song">
+                    <h:column>
+                        <f:facet name="header">#{messages['song.field.title']}</f:facet>
+                        #{song.title}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">#{messages['song.field.artist']}</f:facet>
+                        <h:link outcome="/songs/view.xhtml">
+                            <f:param name="id" value="#{song.id}" />
+                            #{messages['actions.view']}
+                        </h:link>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">#{messages['actions.edit']}</f:facet>
+                        <h:link outcome="/songs/form.xhtml" rendered="#{authView.isAdmin() or authView.isOwner(song.userId)}">
+                            <f:param name="id" value="#{song.id}" />
+                            #{messages['actions.edit']}
+                        </h:link>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">#{messages['table.actions']}</f:facet>
+                        <h:commandButton value="#{messages['actions.delete']}" action="#{directorView.deleteSelectedSong}" rendered="#{authView.isAdmin() or authView.isOwner(song.userId)}">
+                            <f:setPropertyActionListener target="#{directorView.songToDeleteId}" value="#{song.id.toString()}" />
+                            <f:ajax execute="@this" render="songsTable" />
+                        </h:commandButton>
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>

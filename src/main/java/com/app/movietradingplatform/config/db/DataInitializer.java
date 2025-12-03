@@ -42,12 +42,6 @@ public class DataInitializer {
     private MovieService movieService;
 
     private Pbkdf2PasswordHash passwordHash;
-    @Inject
-    public DataInitializer(
-            @SuppressWarnings("CdiInjectionPointsInspection") Pbkdf2PasswordHash passwordHash
-    ) {
-        this.passwordHash = passwordHash;
-    }
 
     @EJB
     public void setUserService(UserService service) {
@@ -62,34 +56,41 @@ public class DataInitializer {
         this.movieService = service;
     }
 
+    @Inject
+    public DataInitializer(
+            @SuppressWarnings("CdiInjectionPointsInspection") Pbkdf2PasswordHash passwordHash
+    ) {
+        this.passwordHash = passwordHash;
+    }
+
     @PostConstruct
     @SneakyThrows
     private void init() {
         User michaelBJordan = User.builder()
                 .id(UUID.fromString("631aff3b-a99d-4a64-a397-f71eba999077"))
-                .username("MichaelB.Jordan")
-                .password(passwordHash.generate(("michaelbjordan").toCharArray()))
+                .username("Michael B. Jordan")
+                .password(passwordHash.generate("michaelbjordan".toCharArray()))
                 .registrationDate(LocalDate.now())
                 .roles(List.of(UserRoles.USER))
                 .build();
         User jeremyStrong = User.builder()
                 .id(UUID.fromString("416842e3-84d4-404d-ad22-810ba3bcaa3e"))
-                .username("JeremyStrong")
-                .password(passwordHash.generate(("jeremystrong").toCharArray()))
+                .username("Jeremy Strong")
+                .password(passwordHash.generate("jeremystrong".toCharArray()))
                 .registrationDate(LocalDate.now())
                 .roles(List.of(UserRoles.USER))
                 .build();
         User mikeyMadison = User.builder()
                 .id(UUID.fromString("fb3b5e04-0573-47bf-96d6-ca6ab430e17a"))
-                .username("MikeyMadison")
-                .password(passwordHash.generate(("mikeymadison").toCharArray()))
+                .username("Mikey Madison")
+                .password(passwordHash.generate("mikeymadison".toCharArray()))
                 .registrationDate(LocalDate.now())
                 .roles(List.of(UserRoles.USER))
                 .build();
         User ayoEdebiri = User.builder()
                 .id(UUID.fromString("4722bebe-1277-4ce0-8500-09398f8d8782"))
-                .username("AyoEdebiri")
-                .password(passwordHash.generate(("ayoedebiri").toCharArray()))
+                .username("Ayo Edebiri")
+                .password(passwordHash.generate("ayoedebiri".toCharArray()))
                 .registrationDate(LocalDate.now())
                 .roles(List.of(UserRoles.USER))
                 .build();

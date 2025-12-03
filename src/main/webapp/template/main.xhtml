@@ -1,65 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
-<html lang="en"
-      xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:ui="jakarta.faces.facelets"
       xmlns:f="jakarta.faces.core">
 <f:view>
     <h:head>
         <meta charset="UTF-8"/>
-        <meta name="description" content="Movie trading platform written with Jakarta EE."/>
-        <meta name="keywords" content="MovieTradingPlatform"/>
-        <meta name="author" content="Maksymilian Kempa"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-        <title>MovieTradingPlatform</title>
+        <title>#{messages['title']}</title>
 
-        <h:outputStylesheet library="webjars" name="mdb-ui-kit/6.4.0/css/mdb.min.css"/>
         <h:outputStylesheet library="css" name="main.css"/>
-        <h:outputScript library="webjars" name="mdb-ui-kit/6.4.0/js/mdb.min.js"/>
-        <h:outputScript library="js" name="main.js" target="body"/>
     </h:head>
 
     <h:body>
         <div class="container">
-            <header class="mb-4 mt-4">
-                <h:graphicImage name="images/logo.png" alt="MovieTradingPlatform Logo" class="img-fluid" style="max-height: 150px;"/>
-                <h1>MovieTradingPlatform</h1>
-                <h:form styleClass="container d-flex  align-items-center justify-content-end"
-                        rendered="#{facesContext.externalContext.userPrincipal != null}">
-                    Logged: <h:outputText value="#{facesContext.externalContext.userPrincipal.name}"/>
-                    <h:commandButton styleClass="btn btn-link" value="Logout"
-                                     action="#{userLogout.logoutAction()}"/>
-                </h:form>
+            <header class="site-header">
+                <div class="brand">
+                    <h:graphicImage library="images" name="#{messages['header.logo']}" styleClass="logo" alt="#{messages['title']}"/>
+                    <h:graphicImage library="images" name="#{messages['header.flag']}" styleClass="flag" alt="lang"/>
+                </div>
+                <div class="tagline">#{messages['tagline']}</div>
+                <div class="auth">
+                    <h:panelGroup rendered="#{not empty request.userPrincipal}">
+                        <h:outputText value="#{messages['hello']}, " />
+                        <h:outputText value="#{request.userPrincipal.name}" />
+                        <h:form>
+                            <h:commandButton value="#{messages['logout']}" action="#{logoutView.logout}" styleClass="btn btn-link" />
+                        </h:form>
+                    </h:panelGroup>
+                    <h:panelGroup rendered="#{empty request.userPrincipal}">
+                        <h:link outcome="/view/auth/login.xhtml" value="#{messages['login']}" style="color: white;"/>
+                    </h:panelGroup>
+                </div>
             </header>
 
-            <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-                <div class="container-fluid">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <h:link styleClass="nav-link" outcome="/index.xhtml">Home</h:link>
-                        </li>
-                        <li class="nav-item">
-                            <h:link styleClass="nav-link" outcome="/view/director/director_list.xhtml">Directors</h:link>
-                        </li>
-                        <h:panelGroup rendered="#{facesContext.externalContext.isUserInRole('admin')}">
-                            <li class="nav-item">
-                                <h:link styleClass="nav-link"
-                                        outcome="/user/user_list.xhtml">Users</h:link>
-                            </li>
+            <nav class="main-nav">
+                <ul>
+                    <li><h:link outcome="/index.xhtml" value="#{messages['nav.home']}" styleClass="nav-link"/></li>
+                    <li>
+                        <h:panelGroup rendered="#{not empty request.userPrincipal}">
+                            <h:link outcome="/view/director/list.xhtml" value="#{messages['nav.directors']}" styleClass="nav-link"/>
                         </h:panelGroup>
-                    </ul>
-                </div>
+                    </li>
+                    <li>
+                        <h:panelGroup rendered="#{not empty request.userPrincipal}">
+                            <h:link outcome="/view/movie/list.xhtml" value="#{messages['nav.movies']}" styleClass="nav-link"/>
+                        </h:panelGroup>
+                    </li>
+                    <li>
+                        <h:panelGroup rendered="#{authView.isAdmin()}">
+                            <h:link outcome="/view/user/list.xhtml" value="#{messages['nav.users']}" styleClass="nav-link"/>
+                        </h:panelGroup>
+                    </li>
+                </ul>
             </nav>
 
-            <main class="mb-4 mt-4">
-                <ui:insert name="content"/>
+            <main class="content">
+                <ui:insert name="content">
+                    <h:panelGroup>
+                        <h2>#{messages['welcome.title']}</h2>
+                        <p>#{messages['welcome.body']}</p>
+                    </h:panelGroup>
+                </ui:insert>
             </main>
 
-            <footer class="text-center text-lg-start bg-light text-muted p-2">
-                <div class="text-center">
-                    Copyright &#169; 2025, Maksymilian Kempa
-                </div>
+            <footer class="site-footer">
+                <div>© 2025 Movie Trading Platform</div>
             </footer>
         </div>
     </h:body>

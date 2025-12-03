@@ -1,187 +1,200 @@
-/* ------------------------------
-   Global Layout
----------------------------------*/
+/* main.css */
 
+/* General styles */
 body {
-    background-color: #f9fafb;
-    font-family: 'Inter', 'Roboto', sans-serif;
-    color: #212529;
+    font-family: Arial, sans-serif;
     margin: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
 }
 
 .container {
-    flex: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header styles */
+.site-header {
     display: flex;
-    flex-direction: column;
-}
-
-/* ------------------------------
-   Header
----------------------------------*/
-
-header {
-    text-align: center;
-    padding: 1rem 0;
-    background: linear-gradient(90deg, #512da8, #673ab7);
+    justify-content: space-between;
+    align-items: center;
+    background-color: #004080;
     color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px 20px;
+    border-bottom: 4px solid #003366;
 }
 
-header h1 {
-    font-size: 2.2rem;
-    font-weight: 600;
-    letter-spacing: 1px;
+.site-header .brand {
+    display: flex;
+    align-items: center;
+}
+
+.site-header .logo {
+    height: 50px;
+    margin-right: 10px;
+}
+
+.site-header .flag {
+    height: 30px;
+    margin-left: 10px;
+}
+
+.site-header .tagline {
+    font-size: 1.2em;
+    font-style: italic;
+}
+
+.site-header .auth {
+    display: flex;
+    align-items: center;
+}
+
+.site-header .btn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* Navigation styles */
+.main-nav {
+    background-color: #003366;
+    margin: 20px 0;
+    padding: 10px 0;
+}
+
+.main-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+.main-nav .nav-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.main-nav .nav-link:hover {
+    text-decoration: underline;
+}
+
+/* Main content styles */
+.content {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer styles */
+.site-footer {
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #004080;
+    color: #fff;
+    font-size: 0.9em;
+}
+
+/* login.css */
+
+/* General styles for the login page */
+.container.login-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.text--justified {
+    text-align: justify;
 }
 
 header h2 {
-    font-size: 2.0rem;
-    font-weight: 600;
-    letter-spacing: 1px;
+    text-align: center;
+    color: #004080;
+    margin-bottom: 20px;
 }
 
-/* ------------------------------
-   Navigation Bar
----------------------------------*/
-
-.navbar {
-    border-radius: 10px;
-    background: #fff !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease-in-out;
+/* Form row styles */
+.row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
 }
 
-.navbar .nav-link {
-    color: #512da8 !important;
-    font-weight: 500;
-    transition: color 0.3s, background 0.3s;
-    border-radius: 6px;
-    padding: 0.5rem 1rem;
+.col-4 {
+    flex: 0 0 100%;
+    max-width: 100%;
 }
 
-.navbar .nav-link:hover,
-.navbar .nav-link.active {
-    color: #fff !important;
-    background: #512da8;
-    box-shadow: 0 2px 4px rgba(81, 45, 168, 0.4);
+.col-2 {
+    flex: 0 0 45%;
+    max-width: 45%;
 }
 
-/* ------------------------------
-   Main Content
----------------------------------*/
-
-main {
-    flex: 1;
-    background: #ffffff;
-    border-radius: 10px;
-    padding: 2rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    max-width: 1000px;
-    margin: 2rem auto;
-    animation: fadeIn 0.4s ease-in-out;
+/* Form input styles */
+.form-outline {
+    margin-bottom: 15px;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
 }
 
-/* Headings */
-main h2, main h3 {
-    color: #512da8;
-    font-weight: 600;
-    margin-bottom: 1rem;
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
 }
 
-/* Buttons */
-.btn-primary {
-    background: #512da8;
+/* Button styles */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
     border: none;
-    transition: all 0.2s;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #004080;
+    color: #fff;
 }
 
 .btn-primary:hover {
-    background: #673ab7;
-    box-shadow: 0 4px 8px rgba(81, 45, 168, 0.4);
+    background-color: #003366;
 }
 
-/* Tables */
-table {
-    width: 100%;
-    border-collapse: collapse;
+.btn-secondary {
+    background-color: #ccc;
+    color: #333;
 }
 
-th {
-    background: #673ab7;
-    color: #fff;
-    padding: 0.75rem;
-    text-align: left;
+.btn-secondary:hover {
+    background-color: #bbb;
 }
 
-td {
-    padding: 0.75rem;
-    border-bottom: 1px solid #e9ecef;
-}
-
-tr:hover {
-    background-color: #f1f0ff;
-}
-
-/* ------------------------------
-   Footer
----------------------------------*/
-
-footer {
-    background: #f5f5f5;
-    color: #666;
-    font-size: 0.9rem;
-    border-top: 1px solid #e9ecef;
-    border-radius: 10px;
-    margin-top: auto;
-}
-
-footer div {
-    padding: 1rem;
-}
-
-/* ------------------------------
-   Utility Classes
----------------------------------*/
-
-.text-purple {
-    color: #512da8 !important;
-}
-
-.card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease-in-out;
-}
-
-.card:hover {
-    transform: translateY(-4px);
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: #b39ddb;
-    border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background-color: #9575cd;
+/* Text alignment for buttons */
+.text-center {
+    text-align: center;
 }

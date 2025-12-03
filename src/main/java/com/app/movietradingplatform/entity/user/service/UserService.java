@@ -12,8 +12,6 @@ import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import lombok.NoArgsConstructor;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.Principal;
 import java.util.*;
 
@@ -72,18 +70,16 @@ public class UserService {
         userRepository.deleteAll();
     }
 
-    public boolean verifyCallerPrincipal(UUID userId) {
+    public boolean verifyCallerPrincipal() {
         if (securityContext != null && !securityContext.isCallerInRole(UserRoles.ADMIN)) {
             Principal principal = securityContext.getCallerPrincipal();
             if (principal == null)
                 return false;
-//                throw new RuntimeException("Access denied: not owner");
             Optional<User> userOpt = findByUsername(principal.getName());
             if (userOpt.isEmpty())
                 return false;
-//                throw new RuntimeException("Access denied: not owner");
             User caller = userOpt.get();
-            return caller.getId().equals(userId);
+            return caller.getUsername().equals(principal.getName());
         }
         return true;
     }

@@ -14,8 +14,6 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.security.enterprise.SecurityContext;
-import java.security.Principal;
 import lombok.NoArgsConstructor;
 
 import java.util.*;
@@ -28,9 +26,6 @@ public class MovieService {
     private MovieRepository movieRepository;
     private DirectorService directorService;
     private UserService userService;
-
-    @Inject
-    private SecurityContext securityContext;
 
     @EJB
     public void setDirectorService(DirectorService directorService) {
@@ -182,14 +177,13 @@ public class MovieService {
         });
     }
 
-    @PermitAll
+    @RolesAllowed(UserRoles.ADMIN)
     public List<Movie> findMoviesByUser(UUID userId) {
         return userService.find(userId)
                 .map(User::getOwnedMovies)
                 .orElse(Collections.emptyList());
     }
 
-    @PermitAll
     public Optional<Movie> findMovieByUser(UUID userId, UUID movieId) {
         return userService.find(userId)
                 .flatMap(director -> director.getOwnedMovies().stream()
@@ -197,7 +191,7 @@ public class MovieService {
                         .findFirst());
     }
 
-    @PermitAll
+    @RolesAllowed(UserRoles.ADMIN)
     public Movie createMovieForUser(UUID userId, Movie movie) {
         return userService.find(userId).map(user -> {
             if (movie.getId() == null) movie.setId(UUID.randomUUID());
@@ -215,34 +209,39 @@ public class MovieService {
         }).orElseThrow(() -> new NoSuchElementException("User not found"));
     }
 
-    @PermitAll
+    @RolesAllowed(UserRoles.ADMIN)
     public Movie updateMovieForUser(UUID userId, UUID movieId, Movie updatedMovie) {
-        return userService.find(userId).flatMap(user -> movieRepository.find(movieId).map(existingMovie -> {
-            if (!Objects.equals(existingMovie.getUser().getId(), userId)) {
-                throw new IllegalArgumentException("Movie does not belong to the specified user");
-            }
+        return userService.find(userId).flatMap(user -> {
+            return movieRepository.find(movieId).map(existingMovie -> {
+                if (!Objects.equals(existingMovie.getUser().getId(), userId)) {
+                    throw new IllegalArgumentException("Movie does not belong to the specified user");
+                }
 
-            // Update movie details
-            existingMovie.setTitle(updatedMovie.getTitle());
-            existingMovie.setReleaseDate(updatedMovie.getReleaseDate());
-            existingMovie.setGenres(updatedMovie.getGenres());
-            movieRepository.update(existingMovie);
+                // Update movie details
+                existingMovie.setTitle(updatedMovie.getTitle());
+                existingMovie.setReleaseDate(updatedMovie.getReleaseDate());
+                existingMovie.setGenres(updatedMovie.getGenres());
+                movieRepository.update(existingMovie);
 
-            return existingMovie;
-        })).orElseThrow(() -> new NoSuchElementException("Director or Movie not found"));
+                return existingMovie;
+            });
+        }).orElseThrow(() -> new NoSuchElementException("Director or Movie not found"));
     }
 
-    @PermitAll
+    @RolesAllowed(UserRoles.ADMIN)
     public void deleteMovieForUser(UUID userId, UUID movieId) {
         userService.find(userId).ifPresent(user -> {
             movieRepository.find(movieId).ifPresent(movie -> {
-                if (!Objects.equals(movie.getUser().getId(), userId)) {
+                if (!Objects.equals(movie.getDirector().getId(), userId)) {
                     throw new IllegalArgumentException("Movie does not belong to the specified user");
                 }
+
+                // Remove the movie from the director's movie list
                 if (user.getOwnedMovies() != null) {
                     user.getOwnedMovies().removeIf(m -> Objects.equals(m.getId(), movieId));
                 }
                 userService.update(user);
+
                 // Delete the movie
                 movieRepository.delete(movie);
             });

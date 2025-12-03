@@ -18,28 +18,28 @@ Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadm
 
 ### Get all movies for a user
 # @no-cookie-jar
-GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users/631aff3b-a99d-4a64-a397-f71eba999077/movies
+GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/movies
 #Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
-Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
-#Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
+#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
 
 ### Get specific movie for a user
 # @no-cookie-jar
-GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users/631aff3b-a99d-4a64-a397-f71eba999077/movies/243526c0-de68-4334-85a4-37656a046e90
+GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/movies/243526c0-de68-4334-85a4-37656a046e90
 #Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
 Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
 #Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
 
-### Get all movies
+### Get all movies for a user
 # @no-cookie-jar
 GET http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/movies
-Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
-#Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
+#Authorization: Basic YWRtaW4tc2VydmljZTphZG1pbmFkbWlu   # admin-service:adminadmin
+Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
 #Authorization: Basic SmVyZW15U3Ryb25nOmplcmVteXN0cm9uZw==   # JeremyStrong:jeremystrong
 
 ### Create new movie for user
 # @no-cookie-jar
-POST http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/users/631aff3b-a99d-4a64-a397-f71eba999077/movies
+POST http://localhost:9080/movietradingplatform-1.0-SNAPSHOT/api/movies
 Authorization: Basic TWljaGFlbEIuSm9yZGFuOm1pY2hhZWxiam9yZGFu   # MichaelB.Jordan:michaelbjordan
 Content-Type: application/json
 

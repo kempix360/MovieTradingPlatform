@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{movieView.id}" />
+        <f:viewAction action="#{movieView.init}" />
+    </f:metadata>
+
+    <ui:define name="content">
+        <f:event type="preRenderView" listener="#{authView.checkAuth}" />
+        <h2>Movie details</h2>
+        <h:outputText value="#{messages['notfound']}" rendered="#{movieView.notFound}" />
+
+        <h:panelGroup rendered="#{not movieView.notFound}">
+            <h:panelGrid columns="2">
+                <h:outputText value="Title:" />
+                <h:outputText value="#{movieView.songDto.title}" />
+                <h:outputText value="Genre:" />
+                <h:outputText value="#{movieView.songDto.genre}" />
+                <h:outputText value="Release year:" />
+                <h:outputText value="#{movieView.songDto.releaseYear}" />
+                <h:outputText value="Duration:" />
+                <h:outputText value="#{movieView.songDto.duration}" />
+                <h:outputText value="Artist:" />
+                <h:panelGroup>
+                    <h:link rendered="#{not empty movieView.songDto.artistId}" outcome="/artists/view.xhtml">
+                        <f:param name="id" value="#{movieView.songDto.artistId}" />
+                        #{movieView.artistName}
+                    </h:link>
+                    <h:outputText rendered="#{empty movieView.songDto.artistId}" value="-" />
+                </h:panelGroup>
+            </h:panelGrid>
+
+            <h:form>
+                <h:commandButton value="#{messages['actions.delete']}" action="#{movieView.delete}" rendered="#{authView.isAdmin() or authView.isOwner(songView.songDto.userId)}"/>
+                &#160;
+                <h:link outcome="/movie/form.xhtml" rendered="#{authView.isAdmin() or authView.isOwner(movieView.songDto.userId)}">
+                    <f:param name="id" value="#{movieView.id}" />
+                    #{messages['actions.edit']}
+                </h:link>
+            </h:form>
+        </h:panelGroup>
+    </ui:define>
+</ui:composition>
