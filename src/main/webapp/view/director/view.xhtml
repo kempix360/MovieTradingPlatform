@@ -27,10 +27,6 @@
             <h:form>
                 <h:commandButton value="#{messages['director.delete']}" action="#{directorView.deleteDirector(directorView.id)}" rendered="#{authView.isAdmin()}"/>
             </h:form>
-            <h:link outcome="/view/director/form.xhtml" rendered="#{authView.isAdmin()}">
-                <f:param name="id" value="#{directorView.id}" />
-                #{messages['director.edit']}
-            </h:link>
             <h:form>
                 <h:link outcome="/view/movie/form.xhtml" value="#{messages['movie.add']}" rendered="#{not empty request.userPrincipal}">
                     <f:param name="directorId" value="#{directorView.id}" />

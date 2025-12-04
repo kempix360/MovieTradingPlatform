@@ -160,69 +160,69 @@ public class DataInitializer {
                 .build();
         movieService.update(theFloridaProject);
                 // link movie in Director and User objects so bidirectional relations are persisted
-                if (theFloridaProject.getDirector() != null) {
-                        Director d = theFloridaProject.getDirector();
-                        if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
-                        d.getMovies().add(theFloridaProject);
-                        directorService.update(d);
-                }
-                if (theFloridaProject.getUser() != null) {
-                        User u = theFloridaProject.getUser();
-                        if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
-                        u.getOwnedMovies().add(theFloridaProject);
-                        userService.update(u);
-                }
+        if (theFloridaProject.getDirector() != null) {
+                Director d = theFloridaProject.getDirector();
+                if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
+                d.getMovies().add(theFloridaProject);
+                directorService.update(d);
+        }
+        if (theFloridaProject.getUser() != null) {
+                User u = theFloridaProject.getUser();
+                if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
+                u.getOwnedMovies().add(theFloridaProject);
+                userService.update(u);
+        }
         movieService.update(tangerine);
-                if (tangerine.getDirector() != null) {
-                        Director d = tangerine.getDirector();
-                        if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
-                        d.getMovies().add(tangerine);
-                        directorService.update(d);
-                }
-                if (tangerine.getUser() != null) {
-                        User u = tangerine.getUser();
-                        if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
-                        u.getOwnedMovies().add(tangerine);
-                        userService.update(u);
-                }
+        if (tangerine.getDirector() != null) {
+                Director d = tangerine.getDirector();
+                if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
+                d.getMovies().add(tangerine);
+                directorService.update(d);
+        }
+        if (tangerine.getUser() != null) {
+                User u = tangerine.getUser();
+                if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
+                u.getOwnedMovies().add(tangerine);
+                userService.update(u);
+        }
         movieService.update(theWitch);
-                if (theWitch.getDirector() != null) {
-                        Director d = theWitch.getDirector();
-                        if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
-                        d.getMovies().add(theWitch);
-                        directorService.update(d);
-                }
-                if (theWitch.getUser() != null) {
-                        User u = theWitch.getUser();
-                        if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
-                        u.getOwnedMovies().add(theWitch);
-                        userService.update(u);
-                }
+        if (theWitch.getDirector() != null) {
+                Director d = theWitch.getDirector();
+                if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
+                d.getMovies().add(theWitch);
+                directorService.update(d);
+        }
+        if (theWitch.getUser() != null) {
+                User u = theWitch.getUser();
+                if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
+                u.getOwnedMovies().add(theWitch);
+                userService.update(u);
+        }
         movieService.update(theLighthouse);
-                if (theLighthouse.getDirector() != null) {
-                        Director d = theLighthouse.getDirector();
-                        if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
-                        d.getMovies().add(theLighthouse);
-                        directorService.update(d);
-                }
-                if (theLighthouse.getUser() != null) {
-                        User u = theLighthouse.getUser();
-                        if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
-                        u.getOwnedMovies().add(theLighthouse);
-                        userService.update(u);
-                }
+        if (theLighthouse.getDirector() != null) {
+                Director d = theLighthouse.getDirector();
+                if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
+                d.getMovies().add(theLighthouse);
+                directorService.update(d);
+        }
+        if (theLighthouse.getUser() != null) {
+                User u = theLighthouse.getUser();
+                if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
+                u.getOwnedMovies().add(theLighthouse);
+                userService.update(u);
+        }
         movieService.update(arrival);
-                if (arrival.getDirector() != null) {
-                        Director d = arrival.getDirector();
-                        if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
-                        d.getMovies().add(arrival);
-                        directorService.update(d);
-                }
-                if (arrival.getUser() != null) {
-                        User u = arrival.getUser();
-                        if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
-                        u.getOwnedMovies().add(arrival);
-                        userService.update(u);
-                }
+        if (arrival.getDirector() != null) {
+                Director d = arrival.getDirector();
+                if (d.getMovies() == null) d.setMovies(new java.util.ArrayList<>());
+                d.getMovies().add(arrival);
+                directorService.update(d);
+        }
+        if (arrival.getUser() != null) {
+                User u = arrival.getUser();
+                if (u.getOwnedMovies() == null) u.setOwnedMovies(new java.util.ArrayList<>());
+                u.getOwnedMovies().add(arrival);
+                userService.update(u);
+        }
     }
 }

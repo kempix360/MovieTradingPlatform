@@ -2,7 +2,10 @@ package com.app.movietradingplatform.entity.director.service;
 
 import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.repository.DirectorRepository;
+import com.app.movietradingplatform.entity.movie.Movie;
+import com.app.movietradingplatform.entity.user.User;
 import com.app.movietradingplatform.entity.user.UserRoles;
+import com.app.movietradingplatform.entity.user.service.UserService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
@@ -16,10 +19,12 @@ import java.util.*;
 @NoArgsConstructor()
 public class DirectorService {
     private DirectorRepository directorRepository;
+    private UserService userService;
 
     @Inject
-    public DirectorService(DirectorRepository directorRepository) {
+    public DirectorService(DirectorRepository directorRepository, UserService userService) {
         this.directorRepository = directorRepository;
+        this.userService = userService;
     }
 
     @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
@@ -46,7 +51,20 @@ public class DirectorService {
 
     @RolesAllowed(UserRoles.ADMIN)
     public void delete(UUID id) {
-        directorRepository.find(id).ifPresent(directorRepository::delete);
+        directorRepository.find(id).ifPresent(director -> {
+            // Remove movies from users' ownedMovies lists
+            if (director.getMovies() != null) {
+                for (Movie movie : director.getMovies()) {
+                    User user = movie.getUser();
+                    if (user != null && user.getOwnedMovies() != null) {
+                        user.getOwnedMovies().remove(movie);
+                        userService.update(user); // Persist the updated user
+                    }
+                }
+            }
+            // Delete the director
+            directorRepository.delete(director);
+        });
     }
 
     @RolesAllowed(UserRoles.ADMIN)
