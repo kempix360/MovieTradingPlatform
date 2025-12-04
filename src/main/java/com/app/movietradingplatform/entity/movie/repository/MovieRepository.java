@@ -4,6 +4,10 @@ import com.app.movietradingplatform.entity.movie.Movie;
 import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,21 +28,29 @@ public class MovieRepository {
     }
 
     public List<Movie> findAll() {
-        return em.createQuery("SELECT s FROM Movie s", Movie.class).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Movie> cq = cb.createQuery(Movie.class);
+        Root<Movie> movie = cq.from(Movie.class);
+        cq.select(movie);
+        return em.createQuery(cq).getResultList();
     }
 
     public List<Movie> findByDirector(UUID directorId) {
         if (directorId == null) return List.of();
-        return em.createQuery("SELECT m FROM Movie m WHERE m.director.id = :did", Movie.class)
-                .setParameter("did", directorId)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Movie> cq = cb.createQuery(Movie.class);
+        Root<Movie> movie = cq.from(Movie.class);
+        cq.select(movie).where(cb.equal(movie.get("director").get("id"), directorId));
+        return em.createQuery(cq).getResultList();
     }
 
     public List<Movie> findByUser(UUID userId) {
         if (userId == null) return List.of();
-        return em.createQuery("SELECT m FROM Movie m WHERE m.user.id = :uid", Movie.class)
-                .setParameter("uid", userId)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Movie> cq = cb.createQuery(Movie.class);
+        Root<Movie> movie = cq.from(Movie.class);
+        cq.select(movie).where(cb.equal(movie.get("user").get("id"), userId));
+        return em.createQuery(cq).getResultList();
     }
 
     public void create(Movie movie) {
@@ -56,6 +68,8 @@ public class MovieRepository {
     }
 
     public void deleteAll() {
-        em.createQuery("DELETE FROM Movie").executeUpdate();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaDelete<Movie> cd = cb.createCriteriaDelete(Movie.class);
+        em.createQuery(cd).executeUpdate();
     }
 }

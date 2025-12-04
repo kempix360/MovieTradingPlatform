@@ -2,7 +2,9 @@ package com.app.movietradingplatform.entity.movie;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +31,23 @@ public class Movie implements Serializable {
 
     private String title;
     private LocalDate releaseDate;
+
+    @Column(name = "created_at", updatable = false)
+    private Date createdAt;
+
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Date();
+    }
 
     @Builder.Default
     @ElementCollection(fetch = FetchType.EAGER)

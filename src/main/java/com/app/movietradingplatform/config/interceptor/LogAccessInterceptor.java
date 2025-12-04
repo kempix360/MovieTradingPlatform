@@ -33,6 +33,7 @@ public class LogAccessInterceptor {
         if (principal == null) {
             return context.proceed();
         }
+        String user = principal.getName();
 
         Method method = context.getMethod();
         LogAccess ann = method.getAnnotation(LogAccess.class);
@@ -45,11 +46,10 @@ public class LogAccessInterceptor {
         }
 
         UUID elementId = extractElementId(context.getParameters());
+        String elementIdStr = elementId == null ? "-" : elementId.toString();
 
         // log: username, operation, id
-        String user = principal.getName();
-        String idStr = elementId == null ? "-" : elementId.toString();
-        String msg = String.format("[LOG INFO] user=%s operation=%s resourceId=%s", user, op, idStr);
+        String msg = String.format("[LOG INFO] user=%s operation=%s resourceId=%s", user, op, elementIdStr);
         LOG.log(Level.INFO, msg);
 
         return context.proceed();
@@ -62,13 +62,11 @@ public class LogAccessInterceptor {
             if (param instanceof UUID uuid) {
                 return uuid;
             }
-            // try to reflectively call getId() if present
             try {
                 Method m = param.getClass().getMethod("getId");
                 Object id = m.invoke(param);
                 if (id instanceof UUID) return (UUID) id;
-            } catch (Exception ignored)
-            {
+            } catch (Exception ignored) {
             }
         }
         return null;

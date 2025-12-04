@@ -49,6 +49,14 @@
                         </h:link>
                     </h:column>
                     <h:column>
+                        <f:facet name="header">Created At:</f:facet>
+                        #{movie.createdAt}
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header">Updated At:</f:facet>
+                        #{movie.updatedAt}
+                    </h:column>
+                    <h:column>
                         <f:facet name="header">#{messages['actions.edit']}</f:facet>
                         <h:link outcome="/view/movie/form.xhtml" rendered="#{authView.isAdmin() or authView.isOwner(movie.user.id)}">
                             <f:param name="id" value="#{movie.id}" />

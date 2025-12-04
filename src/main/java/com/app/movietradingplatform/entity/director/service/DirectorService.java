@@ -1,5 +1,6 @@
 package com.app.movietradingplatform.entity.director.service;
 
+import com.app.movietradingplatform.config.interceptor.binding.LogAccess;
 import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.repository.DirectorRepository;
 import com.app.movietradingplatform.entity.movie.Movie;
@@ -38,18 +39,21 @@ public class DirectorService {
     }
 
     @RolesAllowed(UserRoles.ADMIN)
+    @LogAccess("CREATE DIRECTOR")
     public Director create(Director director) {
         directorRepository.create(director);
         return director;
     }
 
     @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
+    @LogAccess("UPDATE DIRECTOR")
     public Director update(Director director) {
         directorRepository.update(director);
         return director;
     }
 
     @RolesAllowed(UserRoles.ADMIN)
+    @LogAccess("DELETE DIRECTOR")
     public void delete(UUID id) {
         directorRepository.find(id).ifPresent(director -> {
             // Remove movies from users' ownedMovies lists

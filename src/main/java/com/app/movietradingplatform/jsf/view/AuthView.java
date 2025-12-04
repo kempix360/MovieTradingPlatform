@@ -28,12 +28,6 @@ public class AuthView {
         }
     }
 
-    public boolean isAdmin() {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        if (fc == null) return false;
-        return fc.getExternalContext().isUserInRole(UserRoles.ADMIN);
-    }
-
     public UUID getCurrentUserId() {
         FacesContext fc = FacesContext.getCurrentInstance();
         if (fc == null) return null;
@@ -41,6 +35,12 @@ public class AuthView {
         if (p == null) return null;
         Optional<User> u = userService.findByUsername(p.getName());
         return u.map(User::getId).orElse(null);
+    }
+
+    public boolean isAdmin() {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        if (fc == null) return false;
+        return fc.getExternalContext().isUserInRole(UserRoles.ADMIN);
     }
 
     public boolean isOwner(Object ownerId) {

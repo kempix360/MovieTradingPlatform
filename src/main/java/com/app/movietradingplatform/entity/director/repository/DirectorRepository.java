@@ -1,9 +1,16 @@
 package com.app.movietradingplatform.entity.director.repository;
 
 import com.app.movietradingplatform.entity.director.Director;
+import com.app.movietradingplatform.entity.movie.Movie;
+import com.app.movietradingplatform.entity.user.User;
 import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,7 +30,11 @@ public class DirectorRepository {
     }
 
     public List<Director> findAll() {
-        return em.createQuery("SELECT a FROM Director a", Director.class).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Director> cq = cb.createQuery(Director.class);
+        Root<Director> directorRoot = cq.from(Director.class);
+        cq.select(directorRoot);
+        return em.createQuery(cq).getResultList();
     }
 
     public void create(Director director) {
@@ -42,6 +53,8 @@ public class DirectorRepository {
     }
 
     public void deleteAll() {
-        em.createQuery("DELETE FROM Director").executeUpdate();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaDelete<Director> cd = cb.createCriteriaDelete(Director.class);
+        em.createQuery(cd).executeUpdate();
     }
 }
