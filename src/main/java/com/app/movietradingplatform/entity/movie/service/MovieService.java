@@ -1,5 +1,6 @@
 package com.app.movietradingplatform.entity.movie.service;
 
+import com.app.movietradingplatform.config.interceptor.binding.LogAccess;
 import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
 import com.app.movietradingplatform.entity.movie.Movie;
@@ -54,19 +55,22 @@ public class MovieService {
         return movieRepository.find(id);
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
+    @LogAccess("CREATE MOVIE")
+    @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
     public Movie create(Movie movie) {
         movieRepository.create(movie);
         return movie;
     }
 
     @RolesAllowed(UserRoles.ADMIN)
+    @LogAccess("UPDATE MOVIE")
     public Movie update(Movie movie) {
         movieRepository.update(movie);
         return movie;
     }
 
     @RolesAllowed(UserRoles.ADMIN)
+    @LogAccess("DELETE MOVIE")
     public void delete(UUID id) {
         movieRepository.find(id).ifPresent(movieRepository::delete);
     }
@@ -74,43 +78,6 @@ public class MovieService {
     @RolesAllowed(UserRoles.ADMIN)
     public void deleteAll() {
         movieRepository.deleteAll();
-    }
-
-    // just for data initialization
-    public void createWithLinks(MovieRequest request) {
-        Movie movie = Movie.builder()
-                .id(UUID.randomUUID())
-                .title(request.getTitle())
-                .releaseDate(request.getReleaseDate())
-                .genres(request.getGenres())
-                .build();
-
-        if (request.getDirectorId() != null) {
-            directorService.find(request.getDirectorId()).ifPresent(movie::setDirector);
-        }
-
-        if (request.getUserId() != null) {
-            userService.find(request.getUserId()).ifPresent(movie::setUser);
-        }
-
-        movieRepository.create(movie);
-
-        // link movie in Director object
-        if (movie.getDirector() != null) {
-            Director director = movie.getDirector();
-            if (director.getMovies() == null) director.setMovies(new ArrayList<>());
-            director.getMovies().add(movie);
-            directorService.update(director);
-        }
-
-        // link movie in User object
-        if (movie.getUser() != null) {
-            User user = movie.getUser();
-            if (user.getOwnedMovies() == null) user.setOwnedMovies(new ArrayList<>());
-            user.getOwnedMovies().add(movie);
-            userService.update(user);
-        }
-
     }
 
     @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
@@ -128,7 +95,8 @@ public class MovieService {
                         .findFirst());
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
+    @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
+    @LogAccess("CREATE MOVIE FOR DIRECTOR")
     public Movie createMovieForDirector(UUID directorId, Movie movie) {
         return directorService.find(directorId).map(director -> {
             if (movie.getId() == null) movie.setId(UUID.randomUUID());
@@ -147,6 +115,7 @@ public class MovieService {
     }
 
     @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
+    @LogAccess("UPDATE MOVIE FOR DIRECTOR")
     public Movie updateMovieForDirector(UUID directorId, UUID movieId, Movie updatedMovie) {
         return directorService.find(directorId).flatMap(director -> movieRepository.find(movieId).map(existingMovie -> {
             if (!Objects.equals(existingMovie.getDirector().getId(), directorId)) {
@@ -164,6 +133,7 @@ public class MovieService {
     }
 
     @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
+    @LogAccess("DELETE MOVIE FOR DIRECTOR")
     public void deleteMovieForDirector(UUID directorId, UUID movieId) {
         directorService.find(directorId).ifPresent(director -> movieRepository.find(movieId).ifPresent(movie -> {
             if (!Objects.equals(movie.getDirector().getId(), directorId)) {
@@ -193,6 +163,19 @@ public class MovieService {
     }
 
     @PermitAll
+    public List<Movie> findAllMoviesByCallerAndDirector(UUID directorId) {
+        if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
+            return movieRepository.findAll();
+        }
+        String callerName = securityContext.getCallerPrincipal().getName();
+        return userService.findByUsername(callerName)
+                .map(user -> user.getOwnedMovies().stream()
+                        .filter(movie -> movie.getDirector() != null && movie.getDirector().getId().equals(directorId))
+                        .toList())
+                .orElse(Collections.emptyList());
+    }
+
+    @PermitAll
     public Optional<Movie> findMovieByCaller(UUID movieId) {
         if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
             return movieRepository.find(movieId);
@@ -205,25 +188,35 @@ public class MovieService {
     }
 
     @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
+    @LogAccess("CREATE MOVIE FOR CALLER")
     public Movie createMovieForCaller(Movie movie) {
         String callerName = securityContext.getCallerPrincipal().getName();
-        return userService.findByUsername(callerName).map(user -> {
-            if (movie.getId() == null) movie.setId(UUID.randomUUID());
-            movie.setUser(user);
-            movieRepository.create(movie);
+        Optional<User> userOptional = userService.findByUsername(callerName);
+        if (userOptional.isEmpty()) {
+            throw new NoSuchElementException("User not found for caller name: " + callerName);
+        }
+        User user = userOptional.get();
+        if (movie.getId() == null) {
+            movie.setId(UUID.randomUUID());
+        }
+        movie.setUser(user);
+        movieRepository.create(movie);
 
-            // Link the movie in the director's movie list
-            if (user.getOwnedMovies() == null) {
-                user.setOwnedMovies(new ArrayList<>());
-            }
-            user.getOwnedMovies().add(movie);
-            userService.update(user);
+        // Link the movie in the user's movie list
+        if (user.getOwnedMovies() == null) {
+            user.setOwnedMovies(new ArrayList<>());
+        }
+        user.getOwnedMovies().add(movie);
+        userService.update(user);
+        Director director = movie.getDirector();
+        director.getMovies().add(movie);
+        directorService.update(director);
 
-            return movie;
-        }).orElseThrow(() -> new NoSuchElementException("User not found"));
+        return movie;
     }
 
     @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
+    @LogAccess("UPDATE MOVIE FOR CALLER")
     public Movie updateMovieForCaller(UUID movieId, Movie updatedMovie) {
         String callerName = securityContext.getCallerPrincipal().getName();
         return userService.findByUsername(callerName).flatMap(user -> movieRepository.find(movieId).map(existingMovie -> {
@@ -242,6 +235,7 @@ public class MovieService {
     }
 
     @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
+    @LogAccess("DELETE MOVIE FOR CALLER")
     public void deleteMovieForCaller(UUID movieId) {
         String callerName = securityContext.getCallerPrincipal().getName();
         userService.findByUsername(callerName).ifPresent(user -> movieRepository.find(movieId).ifPresent(movie -> {

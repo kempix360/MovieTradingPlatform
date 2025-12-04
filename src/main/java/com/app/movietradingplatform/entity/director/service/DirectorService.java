@@ -38,7 +38,7 @@ public class DirectorService {
         return director;
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
+    @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
     public Director update(Director director) {
         directorRepository.update(director);
         return director;

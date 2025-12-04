@@ -4,16 +4,13 @@ import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
 import com.app.movietradingplatform.entity.enums.Genre;
 import com.app.movietradingplatform.entity.movie.Movie;
-import com.app.movietradingplatform.entity.movie.dto.MovieRequest;
 import com.app.movietradingplatform.entity.movie.service.MovieService;
 import jakarta.ejb.EJB;
-import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -36,8 +33,12 @@ public class MovieForm implements Serializable {
 
     public void init() {
         if (movieId != null) {
+            // Load the existing movie
             Optional<Movie> movieOpt = movieService.findMovieByCaller(movieId);
             movieOpt.ifPresent(value -> movie = value);
+        } else {
+            // Initialize a new movie
+            movie = new Movie();
         }
 
         if (directorId != null) {
@@ -49,8 +50,17 @@ public class MovieForm implements Serializable {
 
     public String save() {
         try{
-            movieService.updateMovieForCaller(movieId, movie);
-            return "/view/movie/view.xhtml?faces-redirect=true&id=" + movieId.toString();
+            if (movieId == null) {
+                // Adding a new movie
+                movie.setDirector(director);
+                movieService.createMovieForCaller(movie);
+//                movieService.createMovieForDirector(directorId, movie);
+                return "/view/director/view.xhtml?faces-redirect=true&id=" + director.getId().toString();
+            } else {
+                // Updating an existing movie
+                movieService.updateMovieForCaller(movieId, movie);
+                return "/view/movie/view.xhtml?faces-redirect=true&id=" + movieId.toString();
+            }
         }
         catch(Exception e){
             return null;

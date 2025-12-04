@@ -1,5 +1,6 @@
 package com.app.movietradingplatform.entity.user.service;
 
+import com.app.movietradingplatform.config.interceptor.binding.LogAccess;
 import com.app.movietradingplatform.entity.user.User;
 import com.app.movietradingplatform.entity.user.UserRoles;
 import com.app.movietradingplatform.entity.user.repository.UserRepository;
@@ -48,6 +49,7 @@ public class UserService {
     }
 
     @PermitAll
+    @LogAccess("CREATE USER")
     public User create(User user) {
         user.setPassword(passwordHash.generate(user.getPassword().toCharArray()));
         userRepository.create(user);
@@ -55,17 +57,20 @@ public class UserService {
     }
 
     @PermitAll
+    @LogAccess("UPDATE USER")
     public User update(User user) {
         userRepository.update(user);
         return user;
     }
 
     @PermitAll
+    @LogAccess("DELETE USER")
     public void delete(UUID id) {
         userRepository.delete(userRepository.find(id).orElseThrow());
     }
 
     @RolesAllowed(UserRoles.ADMIN)
+    @LogAccess("DELETE ALL USERS")
     public void deleteAll() {
         userRepository.deleteAll();
     }

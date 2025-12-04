@@ -3,7 +3,6 @@ package com.app.movietradingplatform.entity.movie.jsf.view;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
 import com.app.movietradingplatform.entity.movie.Movie;
 import com.app.movietradingplatform.entity.movie.service.MovieService;
-import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -11,7 +10,6 @@ import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,7 +53,7 @@ public class MovieView implements Serializable {
 
     public String delete() {
         if (id != null) {
-            movieService.delete(id);
+            movieService.deleteMovieForCaller(id);
         }
         return "/view/movie/list.xhtml?faces-redirect=true";
     }

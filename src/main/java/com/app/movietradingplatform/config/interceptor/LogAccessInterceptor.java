@@ -49,8 +49,7 @@ public class LogAccessInterceptor {
         // log: username, operation, id
         String user = principal.getName();
         String idStr = elementId == null ? "-" : elementId.toString();
-        String msg = String.format("[SECURITY] user=%s operation=%s resourceId=%s target=%s#%s",
-                user, op, idStr, method.getDeclaringClass().getSimpleName(), method.getName());
+        String msg = String.format("[LOG INFO] user=%s operation=%s resourceId=%s", user, op, idStr);
         LOG.log(Level.INFO, msg);
 
         return context.proceed();

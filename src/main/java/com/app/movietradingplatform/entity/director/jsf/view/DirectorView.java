@@ -39,7 +39,7 @@ public class DirectorView implements Serializable {
             if (directorOpt.isPresent()) {
                 director = directorOpt.get();
                 notFound = false;
-                movies = movieService.findMoviesByDirector(director.getId());
+                movies = movieService.findAllMoviesByCallerAndDirector(director.getId());
             }
             else notFound = true;
         } else {

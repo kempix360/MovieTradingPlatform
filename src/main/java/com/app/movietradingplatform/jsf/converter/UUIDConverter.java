@@ -22,5 +22,4 @@ public class UUIDConverter implements Converter<UUID> {
     public String getAsString(FacesContext context, UIComponent component, UUID value) {
         return value.toString();
     }
-
 }
