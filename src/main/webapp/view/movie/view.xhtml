@@ -18,27 +18,25 @@
         <h:panelGroup rendered="#{not movieView.notFound}">
             <h:panelGrid columns="2">
                 <h:outputText value="Title:" />
-                <h:outputText value="#{movieView.songDto.title}" />
-                <h:outputText value="Genre:" />
-                <h:outputText value="#{movieView.songDto.genre}" />
-                <h:outputText value="Release year:" />
-                <h:outputText value="#{movieView.songDto.releaseYear}" />
-                <h:outputText value="Duration:" />
-                <h:outputText value="#{movieView.songDto.duration}" />
-                <h:outputText value="Artist:" />
+                <h:outputText value="#{movieView.movie.title}" />
+                <h:outputText value="Genres:" />
+                <h:outputText value="#{movieView.movie.genres}" />
+                <h:outputText value="Release date:" />
+                <h:outputText value="#{movieView.movie.releaseDate}" />
+                <h:outputText value="Director:" />
                 <h:panelGroup>
-                    <h:link rendered="#{not empty movieView.songDto.artistId}" outcome="/artists/view.xhtml">
-                        <f:param name="id" value="#{movieView.songDto.artistId}" />
-                        #{movieView.artistName}
+                    <h:link rendered="#{not empty movieView.movie.director}" outcome="/view/director/view.xhtml">
+                        <f:param name="id" value="#{movieView.movie.director.id}" />
+                        #{movieView.movie.director.name}
                     </h:link>
-                    <h:outputText rendered="#{empty movieView.songDto.artistId}" value="-" />
+                    <h:outputText rendered="#{empty movieView.movie.director.id}" value="-" />
                 </h:panelGroup>
             </h:panelGrid>
 
             <h:form>
-                <h:commandButton value="#{messages['actions.delete']}" action="#{movieView.delete}" rendered="#{authView.isAdmin() or authView.isOwner(songView.songDto.userId)}"/>
+                <h:commandButton value="#{messages['actions.delete']}" action="#{movieView.delete}" rendered="#{authView.isAdmin() or authView.isOwner(movieView.movie.user.id)}"/>
                 &#160;
-                <h:link outcome="/movie/form.xhtml" rendered="#{authView.isAdmin() or authView.isOwner(movieView.songDto.userId)}">
+                <h:link outcome="/view/movie/form.xhtml" rendered="#{authView.isAdmin() or authView.isOwner(movieView.movie.user.id)}">
                     <f:param name="id" value="#{movieView.id}" />
                     #{messages['actions.edit']}
                 </h:link>

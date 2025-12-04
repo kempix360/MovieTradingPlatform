@@ -21,17 +21,9 @@ import java.util.UUID;
 public class UserView implements Serializable {
     private UUID id;
     private User user;
-    private UserService userService;
-    private MovieService movieService;
 
     @EJB
-    public void setUserService(UserService service) {
-        this.userService = service;
-    }
-    @EJB
-    public void setMovieService(MovieService service) {
-        this.movieService = service;
-    }
+    private UserService userService;
 
     public void init() {
         if (id != null) {
@@ -40,9 +32,9 @@ public class UserView implements Serializable {
         }
     }
 
-    public String deleteMovie(UUID movieId) {
-        if (movieId == null) return null;
-        movieService.delete(movieId);
-        return "user_details?faces-redirect=true&amp;id=" + id;
+    public String delete(UUID userId) {
+        if (userId == null) return null;
+        userService.delete(userId);
+        return null;
     }
 }

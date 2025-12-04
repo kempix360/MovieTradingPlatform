@@ -17,25 +17,21 @@
 
         <h:panelGroup rendered="#{not userView.notFound}">
             <h:panelGrid columns="2">
-                <h:outputText value="#{messages['user.field.login']}" />
-                <h:outputText value="#{userView.userDto.login}" />
-                <h:outputText value="#{messages['user.field.name']}" />
-                <h:outputText value="#{userView.userDto.name}" />
-                <h:outputText value="#{messages['user.field.surname']}" />
-                <h:outputText value="#{userView.userDto.surname}" />
-                <h:outputText value="#{messages['user.field.email']}" />
-                <h:outputText value="#{userView.userDto.email}" />
+                <h:outputText value="#{messages['user.field.username']}" />
+                <h:outputText value="#{userView.user.username}" />
+                <h:outputText value="#{messages['user.field.registrationDate']}" />
+                <h:outputText value="#{userView.user.registrationDate}" />
             </h:panelGrid>
 
-            <h3>#{messages['users.songs.header']}</h3>
-            <h:dataTable value="#{userView.userDto.songs}" var="s">
+            <h3>#{messages['users.movies.header']}</h3>
+            <h:dataTable value="#{userView.user.ownedMovies}" var="s">
                 <h:column>
-                    <f:facet name="header">#{messages['song.field.title']}</f:facet>
+                    <f:facet name="header">#{messages['movie.field.title']}</f:facet>
                     #{s.title}
                 </h:column>
                 <h:column>
                     <f:facet name="header">#{messages['actions.view']}</f:facet>
-                    <h:link outcome="/songs/view.xhtml">
+                    <h:link outcome="/view/movie/view.xhtml">
                         <f:param name="id" value="#{s.id}" />
                         #{messages['actions.view']}
                     </h:link>

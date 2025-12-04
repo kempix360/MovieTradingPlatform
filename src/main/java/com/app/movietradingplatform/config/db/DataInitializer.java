@@ -132,7 +132,7 @@ public class DataInitializer {
                 .releaseDate(LocalDate.of(2015, 7, 10))
                 .genres(List.of(Genre.COMEDY, Genre.DRAMA))
                 .director(seanBaker)
-                .user(michaelBJordan)
+                .user(jeremyStrong)
                 .build();
         Movie theWitch = Movie.builder()
                 .id(UUID.fromString("7a8ca089-76ef-437a-9218-e220dc89c0f5"))
@@ -140,7 +140,7 @@ public class DataInitializer {
                 .releaseDate(LocalDate.of(2015, 1, 23))
                 .genres(List.of(Genre.HORROR, Genre.DRAMA))
                 .director(robertEggers)
-                .user(jeremyStrong)
+                .user(michaelBJordan)
                 .build();
         Movie theLighthouse = Movie.builder()
                 .id(UUID.fromString("7298ac20-daf6-4910-9bb6-561ee9f4d26f"))

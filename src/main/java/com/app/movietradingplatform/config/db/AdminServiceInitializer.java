@@ -64,6 +64,21 @@ public class AdminServiceInitializer {
         } else {
             log.info("User already exists");
         }
+        if (userRepository.findByUsername("second-admin").isEmpty()) {
+            User admin = User.builder()
+                    .id(UUID.fromString("24d59f3a-057c-44d5-825a-19295a6600a8"))
+                    .username("second-admin")
+                    .registrationDate(LocalDate.now())
+                    .password(passwordHash.generate("adminadmin".toCharArray()))
+                    .roles(List.of(UserRoles.ADMIN, UserRoles.USER))
+                    .build();
+
+            userRepository.create(admin);
+            log.info("Created second admin");
+        } else {
+            log.info("User already exists");
+        }
+
     }
 
 }

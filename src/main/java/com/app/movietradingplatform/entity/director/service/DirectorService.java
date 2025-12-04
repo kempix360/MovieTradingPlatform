@@ -22,11 +22,12 @@ public class DirectorService {
         this.directorRepository = directorRepository;
     }
 
-    @RolesAllowed(UserRoles.USER)
+    @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
     public List<Director> findAll() {
         return directorRepository.findAll();
     }
 
+    @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
     public Optional<Director> find(UUID id) {
         return directorRepository.find(id);
     }

@@ -14,6 +14,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import jakarta.security.enterprise.SecurityContext;
 import lombok.NoArgsConstructor;
 
 import java.util.*;
@@ -22,11 +23,18 @@ import java.util.*;
 @Stateless
 @NoArgsConstructor()
 public class MovieService {
-    @Inject
     private MovieRepository movieRepository;
+    private SecurityContext securityContext;
+
+    @Inject
+    public MovieService(MovieRepository movieRepository,
+                        SecurityContext securityContext) {
+        this.movieRepository = movieRepository;
+        this.securityContext = securityContext;
+    }
+
     private DirectorService directorService;
     private UserService userService;
-
     @EJB
     public void setDirectorService(DirectorService directorService) {
         this.directorService = directorService;
@@ -105,7 +113,7 @@ public class MovieService {
 
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
+    @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
     public List<Movie> findMoviesByDirector(UUID directorId) {
         return directorService.find(directorId)
                 .map(Director::getMovies)
@@ -138,62 +146,68 @@ public class MovieService {
         }).orElseThrow(() -> new NoSuchElementException("Director not found"));
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
+    @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
     public Movie updateMovieForDirector(UUID directorId, UUID movieId, Movie updatedMovie) {
-        return directorService.find(directorId).flatMap(director -> {
-            return movieRepository.find(movieId).map(existingMovie -> {
-                if (!Objects.equals(existingMovie.getDirector().getId(), directorId)) {
-                    throw new IllegalArgumentException("Movie does not belong to the specified director");
-                }
+        return directorService.find(directorId).flatMap(director -> movieRepository.find(movieId).map(existingMovie -> {
+            if (!Objects.equals(existingMovie.getDirector().getId(), directorId)) {
+                throw new IllegalArgumentException("Movie does not belong to the specified director");
+            }
 
-                // Update movie details
-                existingMovie.setTitle(updatedMovie.getTitle());
-                existingMovie.setReleaseDate(updatedMovie.getReleaseDate());
-                existingMovie.setGenres(updatedMovie.getGenres());
-                movieRepository.update(existingMovie);
+            // Update movie details
+            existingMovie.setTitle(updatedMovie.getTitle());
+            existingMovie.setReleaseDate(updatedMovie.getReleaseDate());
+            existingMovie.setGenres(updatedMovie.getGenres());
+            movieRepository.update(existingMovie);
 
-                return existingMovie;
-            });
-        }).orElseThrow(() -> new NoSuchElementException("Director or Movie not found"));
+            return existingMovie;
+        })).orElseThrow(() -> new NoSuchElementException("Director or Movie not found"));
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
+    @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
     public void deleteMovieForDirector(UUID directorId, UUID movieId) {
-        directorService.find(directorId).ifPresent(director -> {
-            movieRepository.find(movieId).ifPresent(movie -> {
-                if (!Objects.equals(movie.getDirector().getId(), directorId)) {
-                    throw new IllegalArgumentException("Movie does not belong to the specified director");
-                }
+        directorService.find(directorId).ifPresent(director -> movieRepository.find(movieId).ifPresent(movie -> {
+            if (!Objects.equals(movie.getDirector().getId(), directorId)) {
+                throw new IllegalArgumentException("Movie does not belong to the specified director");
+            }
 
-                // Remove the movie from the director's movie list
-                if (director.getMovies() != null) {
-                    director.getMovies().removeIf(m -> Objects.equals(m.getId(), movieId));
-                }
-                directorService.update(director);
+            // Remove the movie from the director's movie list
+            if (director.getMovies() != null) {
+                director.getMovies().removeIf(m -> Objects.equals(m.getId(), movieId));
+            }
+            directorService.update(director);
 
-                // Delete the movie
-                movieRepository.delete(movie);
-            });
-        });
+            // Delete the movie
+            movieRepository.delete(movie);
+        }));
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
-    public List<Movie> findMoviesByUser(UUID userId) {
-        return userService.find(userId)
+    @PermitAll
+    public List<Movie> findAllMoviesByCaller() {
+        if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
+            return movieRepository.findAll();
+        }
+        String callerName = securityContext.getCallerPrincipal().getName();
+        return userService.findByUsername(callerName)
                 .map(User::getOwnedMovies)
                 .orElse(Collections.emptyList());
     }
 
-    public Optional<Movie> findMovieByUser(UUID userId, UUID movieId) {
-        return userService.find(userId)
-                .flatMap(director -> director.getOwnedMovies().stream()
+    @PermitAll
+    public Optional<Movie> findMovieByCaller(UUID movieId) {
+        if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
+            return movieRepository.find(movieId);
+        }
+        String callerName = securityContext.getCallerPrincipal().getName();
+        return userService.findByUsername(callerName)
+                .flatMap(user -> user.getOwnedMovies().stream()
                         .filter(movie -> Objects.equals(movie.getId(), movieId))
                         .findFirst());
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
-    public Movie createMovieForUser(UUID userId, Movie movie) {
-        return userService.find(userId).map(user -> {
+    @RolesAllowed({UserRoles.USER, UserRoles.ADMIN})
+    public Movie createMovieForCaller(Movie movie) {
+        String callerName = securityContext.getCallerPrincipal().getName();
+        return userService.findByUsername(callerName).map(user -> {
             if (movie.getId() == null) movie.setId(UUID.randomUUID());
             movie.setUser(user);
             movieRepository.create(movie);
@@ -209,42 +223,37 @@ public class MovieService {
         }).orElseThrow(() -> new NoSuchElementException("User not found"));
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
-    public Movie updateMovieForUser(UUID userId, UUID movieId, Movie updatedMovie) {
-        return userService.find(userId).flatMap(user -> {
-            return movieRepository.find(movieId).map(existingMovie -> {
-                if (!Objects.equals(existingMovie.getUser().getId(), userId)) {
-                    throw new IllegalArgumentException("Movie does not belong to the specified user");
-                }
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
+    public Movie updateMovieForCaller(UUID movieId, Movie updatedMovie) {
+        String callerName = securityContext.getCallerPrincipal().getName();
+        return userService.findByUsername(callerName).flatMap(user -> movieRepository.find(movieId).map(existingMovie -> {
+            if (!securityContext.isCallerInRole(UserRoles.ADMIN) && !Objects.equals(existingMovie.getUser().getUsername(), callerName)) {
+                throw new IllegalArgumentException("Movie does not belong to the specified user");
+            }
 
-                // Update movie details
-                existingMovie.setTitle(updatedMovie.getTitle());
-                existingMovie.setReleaseDate(updatedMovie.getReleaseDate());
-                existingMovie.setGenres(updatedMovie.getGenres());
-                movieRepository.update(existingMovie);
+            // Update movie details
+            existingMovie.setTitle(updatedMovie.getTitle());
+            existingMovie.setReleaseDate(updatedMovie.getReleaseDate());
+            existingMovie.setGenres(updatedMovie.getGenres());
+            movieRepository.update(existingMovie);
 
-                return existingMovie;
-            });
-        }).orElseThrow(() -> new NoSuchElementException("Director or Movie not found"));
+            return existingMovie;
+        })).orElseThrow(() -> new NoSuchElementException("Director or Movie not found"));
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
-    public void deleteMovieForUser(UUID userId, UUID movieId) {
-        userService.find(userId).ifPresent(user -> {
-            movieRepository.find(movieId).ifPresent(movie -> {
-                if (!Objects.equals(movie.getDirector().getId(), userId)) {
-                    throw new IllegalArgumentException("Movie does not belong to the specified user");
-                }
-
-                // Remove the movie from the director's movie list
-                if (user.getOwnedMovies() != null) {
-                    user.getOwnedMovies().removeIf(m -> Objects.equals(m.getId(), movieId));
-                }
-                userService.update(user);
-
-                // Delete the movie
-                movieRepository.delete(movie);
-            });
-        });
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
+    public void deleteMovieForCaller(UUID movieId) {
+        String callerName = securityContext.getCallerPrincipal().getName();
+        userService.findByUsername(callerName).ifPresent(user -> movieRepository.find(movieId).ifPresent(movie -> {
+            if (!securityContext.isCallerInRole(UserRoles.ADMIN) && !Objects.equals(movie.getUser().getUsername(), callerName)) {
+                throw new IllegalArgumentException("Movie does not belong to the specified user");
+            }
+            if (user.getOwnedMovies() != null) {
+                user.getOwnedMovies().removeIf(m -> Objects.equals(m.getId(), movieId));
+            }
+            userService.update(user);
+            // Delete the movie
+            movieRepository.delete(movie);
+        }));
     }
 }

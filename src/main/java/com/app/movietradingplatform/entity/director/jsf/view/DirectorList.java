@@ -13,19 +13,18 @@ import java.util.UUID;
 @Named
 @ViewScoped
 public class DirectorList implements Serializable {
-    private DirectorService directorService;
+    private List<Director> directors;
 
     @EJB
-    public void setDirectorService(DirectorService service) {
-        this.directorService = service;
-    }
+    private DirectorService directorService;
 
     public List<Director> getDirectors() {
         return directorService.findAll();
     }
 
-    public String deleteDirector(UUID id) {
-        directorService.delete(id);
-        return "director_list?faces-redirect=true";
+    public void deleteDirector(UUID id) {
+        if (id != null) {
+            directorService.delete(id);
+        }
     }
 }

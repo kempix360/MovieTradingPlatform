@@ -13,11 +13,14 @@ import java.util.UUID;
 @Named
 @ViewScoped
 public class DirectorForm implements Serializable {
-    private DirectorService directorService;
+    UUID id;
+    Director director;
 
     @EJB
-    public void setDirectorService(DirectorService service) {
-        this.directorService = service;
+    private DirectorService directorService;
+
+    public void init(){
+
     }
 
     public List<Director> getDirectors() {
@@ -25,7 +28,9 @@ public class DirectorForm implements Serializable {
     }
 
     public String deleteDirector(UUID id) {
-        directorService.delete(id);
-        return "director_list?faces-redirect=true";
+        try {
+            directorService.delete(id);
+        } catch (IllegalArgumentException ignored) {}
+        return "/view/director/list?faces-redirect=true";
     }
 }

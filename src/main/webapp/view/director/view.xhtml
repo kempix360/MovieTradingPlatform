@@ -12,60 +12,58 @@
 
     <ui:define name="content">
         <f:event type="preRenderView" listener="#{authView.checkAuth}" />
-        <h2>#{messages['artists.view.title']}</h2>
+        <h2>#{messages['directors.view.title']}</h2>
 
         <h:outputText value="#{messages['notfound']}" rendered="#{directorView.notFound}" />
 
         <h:panelGroup rendered="#{not directorView.notFound}">
             <h:panelGrid columns="2">
-                <h:outputText value="#{messages['artist.field.name']}" />
+                <h:outputText value="#{messages['director.field.name']}" />
                 <h:outputText value="#{directorView.director.name}" />
-                <h:outputText value="#{messages['artist.field.country']}" />
-                <h:outputText value="#{directorView.director.country}" />
-                <h:outputText value="#{messages['artist.field.debut']}" />
-                <h:outputText value="#{directorView.director.debutYear}" />
+                <h:outputText value="#{messages['director.field.description']}" />
+                <h:outputText value="#{directorView.director.description}" />
             </h:panelGrid>
 
             <h:form>
-                <h:commandButton value="#{messages['artist.delete']}" action="#{directorView.deleteArtist(directorView.id)}" rendered="#{authView.isAdmin()}"/>
+                <h:commandButton value="#{messages['director.delete']}" action="#{directorView.deleteDirector(directorView.id)}" rendered="#{authView.isAdmin()}"/>
             </h:form>
-            <h:link outcome="/artists/form.xhtml" rendered="#{authView.isAdmin()}">
+            <h:link outcome="/view/director/form.xhtml" rendered="#{authView.isAdmin()}">
                 <f:param name="id" value="#{directorView.id}" />
-                #{messages['artist.edit']}
+                #{messages['director.edit']}
             </h:link>
             <h:form>
-                <h:link outcome="/songs/form.xhtml" value="#{messages['song.add']}" rendered="#{not empty request.userPrincipal}">
-                    <f:param name="artistId" value="#{directorView.id}" />
+                <h:link outcome="/view/movie/form.xhtml" value="#{messages['movie.add']}" rendered="#{not empty request.userPrincipal}">
+                    <f:param name="directorId" value="#{directorView.id}" />
                 </h:link>
             </h:form>
 
-            <h3>#{messages['artist.songs.header']}</h3>
-            <h:form id="songsForm">
-                <h:inputHidden id="artistId" value="#{directorView.id}" />
-                <h:dataTable id="songsTable" value="#{directorView.songs}" var="song">
+            <h3>#{messages['director.movies.header']}</h3>
+            <h:form id="moviesForm">
+                <h:inputHidden id="directorId" value="#{directorView.id}" />
+                <h:dataTable id="moviesTable" value="#{directorView.movies}" var="movie">
                     <h:column>
-                        <f:facet name="header">#{messages['song.field.title']}</f:facet>
-                        #{song.title}
+                        <f:facet name="header">#{messages['movie.field.title']}</f:facet>
+                        #{movie.title}
                     </h:column>
                     <h:column>
-                        <f:facet name="header">#{messages['song.field.artist']}</f:facet>
-                        <h:link outcome="/songs/view.xhtml">
-                            <f:param name="id" value="#{song.id}" />
+                        <f:facet name="header">#{messages['movie.field.director']}</f:facet>
+                        <h:link outcome="/view/movie/view.xhtml">
+                            <f:param name="id" value="#{movie.id}" />
                             #{messages['actions.view']}
                         </h:link>
                     </h:column>
                     <h:column>
                         <f:facet name="header">#{messages['actions.edit']}</f:facet>
-                        <h:link outcome="/songs/form.xhtml" rendered="#{authView.isAdmin() or authView.isOwner(song.userId)}">
-                            <f:param name="id" value="#{song.id}" />
+                        <h:link outcome="/view/movie/form.xhtml" rendered="#{authView.isAdmin() or authView.isOwner(movie.user.id)}">
+                            <f:param name="id" value="#{movie.id}" />
                             #{messages['actions.edit']}
                         </h:link>
                     </h:column>
                     <h:column>
                         <f:facet name="header">#{messages['table.actions']}</f:facet>
-                        <h:commandButton value="#{messages['actions.delete']}" action="#{directorView.deleteSelectedSong}" rendered="#{authView.isAdmin() or authView.isOwner(song.userId)}">
-                            <f:setPropertyActionListener target="#{directorView.songToDeleteId}" value="#{song.id.toString()}" />
-                            <f:ajax execute="@this" render="songsTable" />
+                        <h:commandButton value="#{messages['actions.delete']}" action="#{directorView.deleteSelectedMovie}" rendered="#{authView.isAdmin() or authView.isOwner(movie.user.id)}">
+                            <f:setPropertyActionListener target="#{directorView.movieToDeleteId}" value="#{movie.id}" />
+                            <f:ajax execute="@this" render="moviesTable" />
                         </h:commandButton>
                     </h:column>
                 </h:dataTable>

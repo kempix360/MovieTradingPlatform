@@ -4,6 +4,7 @@ import com.app.movietradingplatform.entity.director.Director;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
 import com.app.movietradingplatform.entity.enums.Genre;
 import com.app.movietradingplatform.entity.movie.Movie;
+import com.app.movietradingplatform.entity.movie.dto.MovieRequest;
 import com.app.movietradingplatform.entity.movie.service.MovieService;
 import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
@@ -21,42 +22,38 @@ import java.util.*;
 @Named
 @ViewScoped
 public class MovieForm implements Serializable {
-    private Movie movie = new Movie();
-    private Director director = new Director();
+    private UUID movieId;
+    private Movie movie;
     private UUID directorId;
+    private Director director;
+    private List<Director> availableDirectors;
     private final List<Genre> availableGenres = new ArrayList<>(Arrays.asList(Genre.values()));
 
+    @EJB
     private DirectorService directorService;
+    @EJB
     private MovieService movieService;
 
-    @EJB
-    public void setDirectorService(DirectorService service) {
-        this.directorService = service;
-    }
-    @EJB
-    public void setMovieService(MovieService service) {
-        this.movieService = service;
-    }
-
-    public void loadDirector() {
-        if (directorId != null) {
-            Optional<Director> d = directorService.find(directorId);
-            director = d.orElse(null);
+    public void init() {
+        if (movieId != null) {
+            Optional<Movie> movieOpt = movieService.findMovieByCaller(movieId);
+            movieOpt.ifPresent(value -> movie = value);
         }
+
+        if (directorId != null) {
+            Optional<Director> directorOpt = directorService.find(directorId);
+            directorOpt.ifPresent(value -> director = value);
+        }
+        availableDirectors = directorService.findAll();
     }
 
-    public String createMovie() {
-        movieService.createMovieForDirector(directorId, movie);
-        return "/view/director/director_details.xhtml?faces-redirect=true&id=" + director.getId();
-    }
-
-    public void redirectIfDirectorIsNull() {
-        if (directorId == null || director == null) {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/view/director/director_list.xhtml");
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
+    public String save() {
+        try{
+            movieService.updateMovieForCaller(movieId, movie);
+            return "/view/movie/view.xhtml?faces-redirect=true&id=" + movieId.toString();
+        }
+        catch(Exception e){
+            return null;
         }
     }
 }

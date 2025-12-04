@@ -3,6 +3,7 @@ package com.app.movietradingplatform.entity.movie.jsf.view;
 import com.app.movietradingplatform.entity.director.service.DirectorService;
 import com.app.movietradingplatform.entity.movie.Movie;
 import com.app.movietradingplatform.entity.movie.service.MovieService;
+import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -21,35 +22,41 @@ import java.util.UUID;
 @ViewScoped
 public class MovieView implements Serializable {
     private UUID id;
-    private UUID directorId;
     private Movie movie;
+    private boolean notFound;
 
+    @EJB
     private DirectorService directorService;
+    @EJB
     private MovieService movieService;
 
-    @EJB
-    public void setDirectorService(DirectorService service) {
-        this.directorService = service;
-    }
-    @EJB
-    public void setMovieService(MovieService service) {
-        this.movieService = service;
-    }
-
-    public void loadMovie() {
+    public void init() {
         if (id != null) {
-            Optional<Movie> m = movieService.findMovieByDirector(directorId, id);
-            movie = m.orElse(null);
+            Optional<Movie> movieOpt = movieService.findMovieByCaller(id);
+            if (movieOpt.isPresent()) {
+                movie = movieOpt.get();
+                notFound = false;
+            }
+            else notFound = true;
+        } else {
+            notFound = true;
         }
-    }
 
-    public void redirectIfMovieIsNull() {
-        if (id == null || movie == null) {
-            try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/view/director/director_list.xhtml");
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
+        if (notFound) {
+            FacesContext fc = FacesContext.getCurrentInstance();
+            if (fc != null) {
+                try {
+                    fc.getExternalContext().redirect(fc.getExternalContext().getRequestContextPath() + "/errors/404.xhtml");
+                } catch (Exception ignored) {
+                }
             }
         }
+    }
+
+    public String delete() {
+        if (id != null) {
+            movieService.delete(id);
+        }
+        return "/view/movie/list.xhtml?faces-redirect=true";
     }
 }

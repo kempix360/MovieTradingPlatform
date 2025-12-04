@@ -198,3 +198,61 @@ header h2 {
 .text-center {
     text-align: center;
 }
+
+/* Movie list styles */
+.movie-list-container {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.movie-list-container h2 {
+    color: #004080;
+    margin-bottom: 15px;
+}
+
+.movie-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.movie-table th, .movie-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.movie-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.movie-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.movie-actions a, .movie-actions button {
+    color: #004080;
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.movie-actions a:hover {
+    text-decoration: underline;
+}
+
+.movie-actions button {
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.movie-actions button:hover {
+    color: #c82333;
+}
